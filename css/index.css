@@ -1,0 +1,23 @@
+body {
+  box-sizing: border-box;
+}
+
+.header {
+  background-color: #aaa;
+}
+
+.contract-info {
+  background-color: blue;
+  height: 100px;
+
+}
+
+.contributor-interface {
+  background-color: #aaa;
+  height: 100px;
+}
+
+.event-log  {
+  background-color: blue;
+  height: 100px;
+}
