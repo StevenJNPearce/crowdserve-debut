@@ -5,10 +5,13 @@
     <title>Crowdserve - Interface</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--<link rel="shortcut icon" href="favicon.ico" />-->
-    <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/jquery.mCustomScrollbar.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/vue"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="./libs/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="./js/components.js"></script>
     <script src="./js/index.js"></script>
 
@@ -41,16 +44,94 @@
       <div class="header">
         <h1>Cryptoprimitive</h1>
         <h2>Crowdserve Interface</h2>
+        <div id="navbar"></div>
       </div>
       <div id="browseVue">
         <div class="contract-info">
-          <div class="row"></div>
+          <div class="row well well-sm">
+            <div class="col-md-3">
+              <div class="contract-state-time">
+                <div class="contract-state">contract-state</div>
+                <div class ='contract-time'>time info about contract</div>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div class="panel panel-primary">
+                <div class="panel-heading">Proposal</div>
+                <div class="panel-body">
+                  <div class='proposal mCustomScrollbar' data-mcs-theme='rounded-dark'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Scelerisque viverra mauris in aliquam sem. Faucibus scelerisque eleifend donec pretium vulputate sapien. Eget est lorem ipsum dolor sit. Id diam maecenas ultricies mi eget mauris pharetra. Nulla facilisi nullam vehicula ipsum. Vitae congue mauris rhoncus aenean vel elit scelerisque. Arcu ac tortor dignissim convallis aenean. Nascetur ridiculus mus mauris vitae ultricies leo integer malesuada. In vitae turpis massa sed elementum tempus egestas sed sed. Est sit amet facilisis magna etiam tempor orci. Sollicitudin nibh sit amet commodo nulla facilisi nullam. Tempus iaculis urna id volutpat lacus laoreet.
+
+Adipiscing tristique risus nec feugiat in. In ante metus dictum at tempor commodo. Montes nascetur ridiculus mus mauris vitae ultricies leo. Faucibus interdum posuere lorem ipsum dolor sit amet. Orci phasellus egestas tellus rutrum tellus. Id neque aliquam vestibulum morbi. In vitae turpis massa sed elementum. Lobortis mattis aliquam faucibus purus in massa tempor. Eu ultrices vitae auctor eu augue. Neque viverra justo nec ultrices dui. Sit amet justo donec enim.
+
+Purus sit amet luctus venenatis lectus magna. Lectus nulla at volutpat diam. Senectus et netus et malesuada fames. Ornare quam viverra orci sagittis eu volutpat. Tellus orci ac auctor augue mauris augue neque. Sed risus pretium quam vulputate dignissim suspendisse in. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi. Eget nunc lobortis mattis aliquam. Suspendisse interdum consectetur libero id faucibus nisl. Nulla facilisi morbi tempus iaculis urna id. In aliquam sem fringilla ut. Malesuada bibendum arcu vitae elementum. Facilisis volutpat est velit egestas dui id ornare arcu. Non nisi est sit amet facilisis magna etiam tempor orci. Leo in vitae turpis massa. Sagittis eu volutpat odio facilisis mauris sit amet massa. Sed blandit libero volutpat sed.
+
+Massa massa ultricies mi quis. Cras adipiscing enim eu turpis. Hac habitasse platea dictumst quisque sagittis purus. Eget duis at tellus at urna. Eget nullam non nisi est sit amet facilisis magna etiam. Vivamus at augue eget arcu. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat. Duis tristique sollicitudin nibh sit amet. Pellentesque elit eget gravida cum sociis natoque. Elit duis tristique sollicitudin nibh sit amet commodo. Eget gravida cum sociis natoque penatibus et magnis. Viverra accumsan in nisl nisi scelerisque eu. Accumsan tortor posuere ac ut consequat semper viverra nam.
+
+Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem dolor sed viverra. Consectetur adipiscing elit ut aliquam purus sit. Laoreet non curabitur gravida arcu. Mattis nunc sed blandit libero. Eget duis at tellus at. Sit amet tellus cras adipiscing enim eu turpis egestas. Pulvinar pellentesque habitant morbi tristique senectus et netus. Ut venenatis tellus in metus vulputate eu scelerisque. Amet purus gravida quis blandit. Risus nec feugiat in fermentum posuere urna nec tincidunt praesent. Integer malesuada nunc vel risus commodo viverra maecenas.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
         <div class="contributor-interface">
-
+          <div class="well well-sm row">
+            <div class="col-md-6">
+              <div class="total-contributions">
+                <div class="centering">
+                  <div class="total-contributed">+ <span class='eth-contributed'>1 eth</span> contributed</div>
+                  <div class="total-recalled">- <span class='eth-recalled'>1 eth</span> recalled</div>
+                  <div class="line" style='height:2px;background-color:black;width:150px;'></div>
+                  <div class="total-supply">Supply: <span class='eth-contribute'>1 eth</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="individual-contributions">
+                <div class="well well-sm">
+                  <h3 class="text-center">Your contributions</h3>
+                  <div class="text-center output">jijijij</div>
+                  <div class="row">
+                    <div class="col-md-offset-1 col-md-3 text-left">
+                      <button class="btn btn-primary">Contribute</button>
+                    </div>
+                    <div class="col-md-offset-1 col-md-3 text-center">
+                      <button class="btn btn-primary">Transfer</button>
+                    </div>
+                    <div class="col-md-3 text-right">
+                      <button class="btn btn-primary">Recall</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="event-log">
+        <div class="statements">
+          <div class="row well well-sm">
+            <div class="statements-log mCustomScrollbar col-md-12" data-mcs-theme="rounded-dark">
 
+              Adipiscing tristique risus nec feugiat in. In ante metus dictum at tempor commodo. Montes nascetur ridiculus mus mauris vitae ultricies leo. Faucibus interdum posuere lorem ipsum dolor sit amet. Orci phasellus egestas tellus rutrum tellus. Id neque aliquam vestibulum morbi. In vitae turpis massa sed elementum. Lobortis mattis aliquam faucibus purus in massa tempor. Eu ultrices vitae auctor eu augue. Neque viverra justo nec ultrices dui. Sit amet justo donec enim.
+
+            Purus sit amet luctus venenatis lectus magna. Lectus nulla Adipiscing tristique risus nec feugiat in. In ante metus dictum at tempor commodo. Montes nascetur ridiculus mus mauris vitae ultricies leo. Faucibus interdum posuere lorem ipsum dolor sit amet. Orci phasellus egestas tellus rutrum tellus. Id neque aliquam vestibulum morbi. In vitae turpis massa sed elementum. Lobortis mattis aliquam faucibus purus in massa tempor. Eu ultrices vitae auctor eu augue. Neque viverra justo nec ultrices dui. Sit amet justo donec enim.
+
+            Purus sit amet luctus venenatis lectus magna. Lectus nulla at volutpat diam. Senectus et netus et malesuada fames. Ornare quam viverra orci sagittis eu volutpat. Tellus orci ac auctor augue mauris augue neque. Sed risus pretium quam vulputate dignissim suspendisse in. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi. Eget nunc lobortis mattis aliquam. Suspendisse interdum consectetur libero id faucibus nisl. Nulla facilisi morbi tempus iaculis urna id. In aliquam sem fringilla ut. Malesuada bibendum arcu vitae elementum. Facilisis volutpat est velit egestas dui id ornare arcu. Non nisi est sit amet facilisis magna etiam tempor orci. Leo in vitae turpis massa. Sagittis eu volutpat odio facilisis mauris sit amet massa. Sed blandit libero volutpat sed.
+
+            Massa massa ultricies mi quis. Cras adipiscing enim eu turpis. Hac habitasse platea dictumst quisque sagittis purus. Eget duis at tellus at urna. Eget nullam non nisi est sit amet facilisis magna etiam. Vivamus at augue eget arcu. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat. Duis tristique sollicitudin nibh sit amet. Pellentesque elit eget gravida cum sociis natoque. Elit duis tristique sollicitudin nibh sit amet commodo. Eget gravida cum sociis natoque penatibus et magnis. Viverra accumsan in nisl nisi scelerisque eu. Accumsan tortor posuere ac ut consequat semper viverra nam.
+
+            Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem dolor sed viverra. Consectetur adipiscing elit ut aliquam purus sit. Laoreet non curabitur gravida arcu. Mattis nunc sed blandit libero. Eget duis at tellus at. Sit amet tellus cras adipiscing enim eu turpis egestas. Pulvinar pellentesque habitant morbi tristique senectus et netus. Ut venenatis tellus in metus vulputate eu scelerisque. Amet purus gravida quis blandit. Risus nec feugiat in fermentum posuere urna nec tincidunt praesent. Integer malesuada nunc vel risus commodo viverra maecenas.Adipiscing tristique risus nec feugiat in. In ante metus dictum at tempor commodo. Montes nascetur ridiculus mus mauris vitae ultricies leo. Faucibus interdum posuere lorem ipsum dolor sit amet. Orci phasellus egestas tellus rutrum tellus. Id neque aliquam vestibulum morbi. In vitae turpis massa sed elementum. Lobortis mattis aliquam faucibus purus in massa tempor. Eu ultrices vitae auctor eu augue. Neque viverra justo nec ultrices dui. Sit amet justo donec enim.
+
+            Purus sit amet luctus venenatis lectus magna. Lectus nulla at volutpat diam. Senectus et netus et malesuada fames. Ornare quam viverra orci sagittis eu volutpat. Tellus orci ac auctor augue mauris augue neque. Sed risus pretium quam vulputate dignissim suspendisse in. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi. Eget nunc lobortis mattis aliquam. Suspendisse interdum consectetur libero id faucibus nisl. Nulla facilisi morbi tempus iaculis urna id. In aliquam sem fringilla ut. Malesuada bibendum arcu vitae elementum. Facilisis volutpat est velit egestas dui id ornare arcu. Non nisi est sit amet facilisis magna etiam tempor orci. Leo in vitae turpis massa. Sagittis eu volutpat odio facilisis mauris sit amet massa. Sed blandit libero volutpat sed.
+
+            Massa massa ultricies mi quis. Cras adipiscing enim eu turpis. Hac habitasse platea dictumst quisque sagittis purus. Eget duis at tellus at urna. Eget nullam non nisi est sit amet facilisis magna etiam. Vivamus at augue eget arcu. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat. Duis tristique sollicitudin nibh sit amet. Pellentesque elit eget gravida cum sociis natoque. Elit duis tristique sollicitudin nibh sit amet commodo. Eget gravida cum sociis natoque penatibus et magnis. Viverra accumsan in nisl nisi scelerisque eu. Accumsan tortor posuere ac ut consequat semper viverra nam.
+
+            Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem dolor sed viverra. Consectetur adipiscing elit ut aliquam purus sit. Laoreet non curabitur gravida arcu. Mattis nunc sed blandit libero. Eget duis at tellus at. Sit amet tellus cras adipiscing enim eu turpis egestas. Pulvinar pellentesque habitant morbi tristique senectus et netus. Ut venenatis tellus in metus vulputate eu scelerisque. Amet purus gravida quis blandit. Risus nec feugiat in fermentum posuere urna nec tincidunt praesent. Integer malesuada nunc vel risus commodo viverra maecenas.
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-9"><input style="margin-top: 5px;  " type="text" placeholder='Type your statement'></div>
+            <div class="col-md-3"><button class='btn btn-primary'>Make statement</button></div>
+          </div>
         </div>
       </div>
     </div>

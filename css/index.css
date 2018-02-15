@@ -1,23 +1,67 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   box-sizing: border-box;
+  background-color: #f2f4f7;
+  margin: 5%;
+  margin-top: 1%;
 }
 
 .header {
-  background-color: #aaa;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .contract-info {
-  background-color: blue;
-  height: 100px;
 
+
+}
+
+.contract-state-time {
+  height: 100px;
+}
+
+.proposal {
+  margin: 10px;
+  padding-right: 20px;
+  height: 100px;
+  overflow-y: auto;
 }
 
 .contributor-interface {
-  background-color: #aaa;
   height: 100px;
 }
 
-.event-log  {
-  background-color: blue;
-  height: 100px;
+.total-contributions {
+  height: 200px;
+  position:relative;
+}
+
+
+.total-contributions > div {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.statements  {
+  margin-top: 200px;
+  width: 100%;
+}
+
+.statements-log {
+
+  min-height: 100px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+input {
+  width:100%;
 }
