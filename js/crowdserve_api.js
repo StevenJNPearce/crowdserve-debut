@@ -6,11 +6,10 @@ window.addEventListener(("load"), () => {
     web3 = new Web3(web3.currentProvider);
   } else {
     console.log('No web3? You should consider trying MetaMask!')
-    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-    //web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
   }
 
-// var instantiateCrowdServe = (web3) => {
+  //create sample crowdserve object for initialization of crowdserve instances
   var CrowdServeClass =  web3.eth.contract([
 	{
 		"constant": true,
@@ -546,8 +545,10 @@ window.addEventListener(("load"), () => {
 	}
 ]);
 
+  //Instantiate contract object from already deployed contract at given address
   var CrowdServe = CrowdServeClass.at("0xe78a0f7e598cc8b0bb87894b0f60dd2a88d6a8ab");
 
+  //method to call all state variables of the contract, returns object with strings and integers
   window.getFullState = (funct) => {
     CrowdServe.getFullState((err, res) => {
       if (err){
@@ -559,7 +560,7 @@ window.addEventListener(("load"), () => {
         fullState.minPreviewInterval = Number(new web3.BigNumber(res[0]));
         fullState.minContribution = Number(new web3.fromWei(res[1]));
         fullState.worker = res[2];
-        fullState.state = res[3].toString();
+        fullState.state = Number(res[3].toString());
         fullState.inPreview = Number(res[4]);
         fullState.previewStageEndTime = Number(web3.fromWei(res[5]));
         fullState.roundEndTime = Number(web3.fromWei(res[6]));
@@ -571,6 +572,7 @@ window.addEventListener(("load"), () => {
     });
   }
 
+  //method to read the current balance of erc223 tokens in contract
   window.balanceOf = (address, funct) => {
     CrowdServe.balanceOf(address, (err, res) => {
       if(err){
@@ -582,8 +584,9 @@ window.addEventListener(("load"), () => {
     });
   }
 
+  //method to transform state integer to string representation
   window.stateOutput = (stateInteger) => {
-    switch stateInteger{
+    switch (stateInteger){
       case 0:
         return "Active (Preview)";
         break;
@@ -596,11 +599,24 @@ window.addEventListener(("load"), () => {
       case 3:
         return "Inactive";
         break;
+      default:
+        undefined;
+        break;
     }
   }
+
+  //test of reading methods
+  getFullState((err,res) => {
+    console.log(res);
+    console.log(res.worker);
+    balanceOf(res.worker, (err,res) => {
+      console.log(res);
+    });
+    console.log(stateOutput(res.state));
+  });
 });
 
-
+//for promisification -- not yet used
 const promisify = (inner) =>
   new Promise((resolve, reject) =>
     inner((err, res) => {
