@@ -1,6 +1,6 @@
-window.addEventListener('load', () => {
+window.addEventListener(("load"), () => {
 
-  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+  // Checking i Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
     // Use Mist/MetaMask's provider
     web3 = new Web3(web3.currentProvider);
@@ -10,6 +10,7 @@ window.addEventListener('load', () => {
     //web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
   }
 
+// var instantiateCrowdServe = (web3) => {
   var CrowdServeClass =  web3.eth.contract([
 	{
 		"constant": true,
@@ -177,6 +178,56 @@ window.addEventListener('load', () => {
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getFullState",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint8"
+			},
+			{
+				"name": "",
+				"type": "bool"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -497,7 +548,64 @@ window.addEventListener('load', () => {
 
   var CrowdServe = CrowdServeClass.at("0xe78a0f7e598cc8b0bb87894b0f60dd2a88d6a8ab");
 
-   CrowdServe.worker((err,res) => {
-     console.log(res, err);
-   })
+  window.getFullState = (funct) => {
+    CrowdServe.getFullState((err, res) => {
+      if (err){
+        funct(err, undefined)
+      }
+      else {
+        var fullState = {};
+        // minPreviewInterval, minContribution, worker, state, inPreview, previewStageEndTime, roundEndTime, totalContributed, totalRecalled, totalSupply
+        fullState.minPreviewInterval = Number(new web3.BigNumber(res[0]));
+        fullState.minContribution = Number(new web3.fromWei(res[1]));
+        fullState.worker = res[2];
+        fullState.state = res[3].toString();
+        fullState.inPreview = Number(res[4]);
+        fullState.previewStageEndTime = Number(web3.fromWei(res[5]));
+        fullState.roundEndTime = Number(web3.fromWei(res[6]));
+        fullState.totalContributed = Number(web3.fromWei(res[7]));
+        fullState.totalRecalled = Number(web3.fromWei(res[8]));
+        fullState.totalSupply = Number(web3.fromWei(res[9]));
+        funct(undefined, fullState);
+      }
+    });
+  }
+
+  window.balanceOf = (address, funct) => {
+    CrowdServe.balanceOf(address, (err, res) => {
+      if(err){
+        funct(err, undefined);
+      }
+      else{
+        funct(undefined, Number(new web3.BigNumber(res)));
+      }
+    });
+  }
+
+  window.stateOutput = (stateInteger) => {
+    switch stateInteger{
+      case 0:
+        return "Active (Preview)";
+        break;
+      case 1:
+        return "Active";
+        break;
+      case 2:
+        return "Ending";
+        break;
+      case 3:
+        return "Inactive";
+        break;
+    }
+  }
 });
+
+
+const promisify = (inner) =>
+  new Promise((resolve, reject) =>
+    inner((err, res) => {
+      if (err) { reject(err) }
+
+      resolve(res);
+    })
+  );
