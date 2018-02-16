@@ -60,6 +60,52 @@ Vue.component('eth-address-output', {
   template: "<a tabindex=0 data-trigger='focus' data-toggle='popover' data-placement='bottom' data-html='true' :data-content='popoverHtml' style='cursor:pointer; outline:none;'>{{formattedAddress}}</a>"
 });
 
+//outputs an Ether value
+//first six decimals in Ether, next six in Gwei, last six in wei
+Vue.component('ether-output', {
+  props: ['wei'],
+  computed: {
+    formatted: function() {
+      if (typeof web3 === "undefined") {
+          var web3 = new Web3();
+      }
+      var ether = web3.fromWei(this.wei, "ether");
+      if (this.wei.toString().length > 12)
+          return ether + " Ether";
+      else if (this.wei.toString().length > 6)
+          return ether * 1000000000 + " Gwei";
+      else if (this.wei.toString().length > 1)
+          return this.wei.toString() + " wei";
+      else
+          return this.wei.toString() + " Ether";
+    }
+  },
+  template: "<span>{{formatted}}</span>"
+});
+
+Vue.component('contract-state-output', {
+  props: ['state', 'preview'],
+  computed: {
+    formattedState: function() {
+      if (this.state == 0)
+        return "Active";
+      else if (this.state == 1)
+        return "Ending";
+      else if (this.state == 2)
+        return "Inactive";
+    },
+    color: function() {
+      if (this.state == 0)
+        return "#ccffcc";
+      else if (this.state == 1)
+        return '#e85f33';
+      else if (this.state == 2)
+        return "#aaaaaa";
+    }
+  },
+  template: "<div class='well well-sm' style='display:inline-block;margin-bottom:0;color:black;width:215px;text-align:center;' v-bind:style='{backgroundColor:color}'><h3 style='margin-top:0;margin-bottom:0'>{{formattedState}}<span v-if='preview'> (Preview)</span></h3></div>"
+});
+
 //outputs information about the autorelease of the burnable payment
 Vue.component('autorelease-output', {
   props: ['state', 'autoreleaseInterval', 'autoreleaseTime'],
@@ -107,27 +153,4 @@ Vue.component('autorelease-output', {
     this.calculate();
   },
   template: "<div class='well well-sm text-left' style='margin-bottom:0;display:flex;justify-content:center;flex-direction:column;background-color:#ffdd99;width:160px;height:60px;'><span  v-html='labelText'></span>{{timeText}}</div>"
-});
-
-//outputs an Ether value
-//first six decimals in Ether, next six in Gwei, last six in wei
-Vue.component('ether-output', {
-  props: ['wei'],
-  computed: {
-    formatted: function() {
-      if (typeof web3 === "undefined") {
-          var web3 = new Web3();
-      }
-      var ether = web3.fromWei(this.wei, "ether");
-      if (this.wei.toString().length > 12)
-          return ether + " Ether";
-      else if (this.wei.toString().length > 6)
-          return ether * 1000000000 + " Gwei";
-      else if (this.wei.toString().length > 1)
-          return this.wei.toString() + " wei";
-      else
-          return this.wei.toString() + " Ether";
-    }
-  },
-  template: "<span>{{formatted}}</span>"
 });

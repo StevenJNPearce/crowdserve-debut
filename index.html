@@ -51,7 +51,7 @@
           <div class="row well well-sm">
             <div class="col-md-3">
               <div class="contract-state-time">
-                <div class="contract-state">contract-state</div>
+                <contract-state-output  :state='contractState' :preview='contractPreview'></contract-state-output>
                 <div class ='contract-time'>time info about contract</div>
               </div>
             </div>
@@ -79,10 +79,10 @@ Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem 
             <div class="col-md-6">
               <div class="total-contributions">
                 <div class="centering">
-                  <div class="total-contributed">+ <span class='eth-contributed'>1 eth</span> contributed</div>
-                  <div class="total-recalled">- <span class='eth-recalled'>1 eth</span> recalled</div>
+                  <div class="total-contributed">+ <ether-output :wei="100000000000"></ether-output> contributed</div>
+                  <div class="total-recalled">- <ether-output :wei="100000000000"></ether-output> recalled</div>
                   <div class="line" style='height:2px;background-color:black;width:150px;'></div>
-                  <div class="total-supply">Supply: <span class='eth-contribute'>1 eth</span></div>
+                  <div class="total-supply">Supply: <ether-output :wei="100000000000"></ether-output></div>
                 </div>
               </div>
             </div>
@@ -90,16 +90,18 @@ Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem 
               <div class="individual-contributions">
                 <div class="well well-sm">
                   <h3 class="text-center">Your contributions</h3>
-                  <div class="text-center output">jijijij</div>
+                  <div style="text-align:center">
+                    <ether-output :wei="100000000000"></ether-output>
+                  </div>
                   <div class="row">
                     <div class="col-md-offset-1 col-md-3 text-left">
-                      <button class="btn btn-primary">Contribute</button>
+                      <button class="btn btn-primary" data-toggle="modal" data-target="#contribute">Contribute</button>
                     </div>
                     <div class="col-md-offset-1 col-md-3 text-center">
-                      <button class="btn btn-primary">Transfer</button>
+                      <button class="btn btn-primary" data-toggle="modal" data-target="#transfer">Transfer</button>
                     </div>
                     <div class="col-md-3 text-right">
-                      <button class="btn btn-primary">Recall</button>
+                      <button class="btn btn-primary" data-toggle="modal" data-target="#recall">Recall</button>
                     </div>
                   </div>
                 </div>
@@ -129,8 +131,77 @@ Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem 
             </div>
           </div>
           <div class="row">
-            <div class="col-md-9"><input style="margin-top: 5px;  " type="text" placeholder='Type your statement'></div>
-            <div class="col-md-3"><button class='btn btn-primary'>Make statement</button></div>
+            <div class="col-md-9"><input class="form-control" type="text" placeholder='Type your statement'></div>
+            <div class="col-md-3"><button class='btn btn-primary' onclick="sendStatementFromForm()">Make statement</button></div>
+          </div>
+        </div>
+      </div>
+      <div id="contribute" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="text-primary">Contribute Funds</h4>
+            </div>
+            <div class="modal-body">
+              <div class="text-center" style="margin-top:20px;">
+                Contribute <input id="contribute-amount-input" class="form-control" style="display:inline-block;width:60%;" placeholder="amount"> ether<br>
+                <button style ="margin-top: 30px;" type="button" class="btn btn-primary" data-dismiss="modal" onclick="contributeFundsFromForm()">Add Funds</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="transfer" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="text-primary">Transfer Funds</h4>
+            </div>
+            <div class="modal-body">
+              <div class="text-center" style="margin-top:20px;">
+                <div style="margin-bottom: 20px;">
+                  transfer <input id="transfer-amount-input" class="form-control" style="display:inline-block;width:30%;" placeholder="amount" > ether
+                </div>
+                <div>
+                  to <input id="transfer-address-input" class="form-control" style="display:inline-block;width:60%;" placeholder="address" >
+                </div>
+                <button style ="margin-top: 30px;" type="button" class="btn btn-primary" data-dismiss="modal"
+                 onclick="transferFundsFromForm()">Transfer Funds</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="recall" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="text-primary">Recall Funds</h4>
+            </div>
+            <div class="modal-body">
+              <div class="text-center" style="margin-top:20px;">
+                Recall <input id="addfunds-amount-input" class="form-control" style="display:inline-block;width:60%;" placeholder="amount"> ether<br>
+                <button style ="margin-top: 30px;" type="button" class="btn btn-primary" data-dismiss="modal" onclick="recallFundsFromForm()">Recall Funds</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="sent-success" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="text-success">Success!</h4>
+            </div>
+            <div class="modal-body">
+              <div class="text-center" style="margin:20px;">
+                Statement successfully sent!
+              </div>
+            </div>
           </div>
         </div>
       </div>
