@@ -12,6 +12,7 @@ $(document).ready(function(){
       $('[data-toggle="popover"]')
         .on('click',function(e){
           e.preventDefault();
+          return true;
         })
         .popover();
       //proposal and statements log scrollbar
