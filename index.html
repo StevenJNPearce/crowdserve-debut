@@ -12,12 +12,15 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="./libs/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="./libs/humanize-duration.js"></script>
+    <script src="./libs/xss-filters.min.js"></script>
+    <script src="./libs/moment.min.js"></script>
     <script src="./js/components.js"></script>
     <script src="./js/index.js"></script>
 
   </head>
   <body>
-    <div class="container-fluid">
+    <div class="container-fluid site">
       <!-- warnings
       <div id="noProviderWarningDiv" hidden='true' align='center'>
         <div class="alert alert-warning" style='display:inline-block; margin-top:5rem'>
@@ -52,14 +55,14 @@
             <div class="col-md-3">
               <div class="contract-state-time">
                 <contract-state-output  :state='contractState' :preview='contractPreview'></contract-state-output>
-                <div class ='contract-time'>time info about contract</div>
+                <state-time-output style="margin-top:20px;":state='contractState' :preview-end-time='previewEndTime' :round-end-time='roundEndTime'></state-time-output>
               </div>
             </div>
             <div class="col-md-9">
               <div class="panel panel-primary">
                 <div class="panel-heading">Proposal</div>
                 <div class="panel-body">
-                  <div class='proposal mCustomScrollbar' data-mcs-theme='rounded-dark'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Scelerisque viverra mauris in aliquam sem. Faucibus scelerisque eleifend donec pretium vulputate sapien. Eget est lorem ipsum dolor sit. Id diam maecenas ultricies mi eget mauris pharetra. Nulla facilisi nullam vehicula ipsum. Vitae congue mauris rhoncus aenean vel elit scelerisque. Arcu ac tortor dignissim convallis aenean. Nascetur ridiculus mus mauris vitae ultricies leo integer malesuada. In vitae turpis massa sed elementum tempus egestas sed sed. Est sit amet facilisis magna etiam tempor orci. Sollicitudin nibh sit amet commodo nulla facilisi nullam. Tempus iaculis urna id volutpat lacus laoreet.
+                  <div class='proposal scrollBar'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Scelerisque viverra mauris in aliquam sem. Faucibus scelerisque eleifend donec pretium vulputate sapien. Eget est lorem ipsum dolor sit. Id diam maecenas ultricies mi eget mauris pharetra. Nulla facilisi nullam vehicula ipsum. Vitae congue mauris rhoncus aenean vel elit scelerisque. Arcu ac tortor dignissim convallis aenean. Nascetur ridiculus mus mauris vitae ultricies leo integer malesuada. In vitae turpis massa sed elementum tempus egestas sed sed. Est sit amet facilisis magna etiam tempor orci. Sollicitudin nibh sit amet commodo nulla facilisi nullam. Tempus iaculis urna id volutpat lacus laoreet.
 
 Adipiscing tristique risus nec feugiat in. In ante metus dictum at tempor commodo. Montes nascetur ridiculus mus mauris vitae ultricies leo. Faucibus interdum posuere lorem ipsum dolor sit amet. Orci phasellus egestas tellus rutrum tellus. Id neque aliquam vestibulum morbi. In vitae turpis massa sed elementum. Lobortis mattis aliquam faucibus purus in massa tempor. Eu ultrices vitae auctor eu augue. Neque viverra justo nec ultrices dui. Sit amet justo donec enim.
 
@@ -111,23 +114,8 @@ Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem 
         </div>
         <div class="statements">
           <div class="row well well-sm">
-            <div class="statements-log mCustomScrollbar col-md-12" data-mcs-theme="rounded-dark">
-
-              Adipiscing tristique risus nec feugiat in. In ante metus dictum at tempor commodo. Montes nascetur ridiculus mus mauris vitae ultricies leo. Faucibus interdum posuere lorem ipsum dolor sit amet. Orci phasellus egestas tellus rutrum tellus. Id neque aliquam vestibulum morbi. In vitae turpis massa sed elementum. Lobortis mattis aliquam faucibus purus in massa tempor. Eu ultrices vitae auctor eu augue. Neque viverra justo nec ultrices dui. Sit amet justo donec enim.
-
-            Purus sit amet luctus venenatis lectus magna. Lectus nulla Adipiscing tristique risus nec feugiat in. In ante metus dictum at tempor commodo. Montes nascetur ridiculus mus mauris vitae ultricies leo. Faucibus interdum posuere lorem ipsum dolor sit amet. Orci phasellus egestas tellus rutrum tellus. Id neque aliquam vestibulum morbi. In vitae turpis massa sed elementum. Lobortis mattis aliquam faucibus purus in massa tempor. Eu ultrices vitae auctor eu augue. Neque viverra justo nec ultrices dui. Sit amet justo donec enim.
-
-            Purus sit amet luctus venenatis lectus magna. Lectus nulla at volutpat diam. Senectus et netus et malesuada fames. Ornare quam viverra orci sagittis eu volutpat. Tellus orci ac auctor augue mauris augue neque. Sed risus pretium quam vulputate dignissim suspendisse in. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi. Eget nunc lobortis mattis aliquam. Suspendisse interdum consectetur libero id faucibus nisl. Nulla facilisi morbi tempus iaculis urna id. In aliquam sem fringilla ut. Malesuada bibendum arcu vitae elementum. Facilisis volutpat est velit egestas dui id ornare arcu. Non nisi est sit amet facilisis magna etiam tempor orci. Leo in vitae turpis massa. Sagittis eu volutpat odio facilisis mauris sit amet massa. Sed blandit libero volutpat sed.
-
-            Massa massa ultricies mi quis. Cras adipiscing enim eu turpis. Hac habitasse platea dictumst quisque sagittis purus. Eget duis at tellus at urna. Eget nullam non nisi est sit amet facilisis magna etiam. Vivamus at augue eget arcu. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat. Duis tristique sollicitudin nibh sit amet. Pellentesque elit eget gravida cum sociis natoque. Elit duis tristique sollicitudin nibh sit amet commodo. Eget gravida cum sociis natoque penatibus et magnis. Viverra accumsan in nisl nisi scelerisque eu. Accumsan tortor posuere ac ut consequat semper viverra nam.
-
-            Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem dolor sed viverra. Consectetur adipiscing elit ut aliquam purus sit. Laoreet non curabitur gravida arcu. Mattis nunc sed blandit libero. Eget duis at tellus at. Sit amet tellus cras adipiscing enim eu turpis egestas. Pulvinar pellentesque habitant morbi tristique senectus et netus. Ut venenatis tellus in metus vulputate eu scelerisque. Amet purus gravida quis blandit. Risus nec feugiat in fermentum posuere urna nec tincidunt praesent. Integer malesuada nunc vel risus commodo viverra maecenas.Adipiscing tristique risus nec feugiat in. In ante metus dictum at tempor commodo. Montes nascetur ridiculus mus mauris vitae ultricies leo. Faucibus interdum posuere lorem ipsum dolor sit amet. Orci phasellus egestas tellus rutrum tellus. Id neque aliquam vestibulum morbi. In vitae turpis massa sed elementum. Lobortis mattis aliquam faucibus purus in massa tempor. Eu ultrices vitae auctor eu augue. Neque viverra justo nec ultrices dui. Sit amet justo donec enim.
-
-            Purus sit amet luctus venenatis lectus magna. Lectus nulla at volutpat diam. Senectus et netus et malesuada fames. Ornare quam viverra orci sagittis eu volutpat. Tellus orci ac auctor augue mauris augue neque. Sed risus pretium quam vulputate dignissim suspendisse in. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi. Eget nunc lobortis mattis aliquam. Suspendisse interdum consectetur libero id faucibus nisl. Nulla facilisi morbi tempus iaculis urna id. In aliquam sem fringilla ut. Malesuada bibendum arcu vitae elementum. Facilisis volutpat est velit egestas dui id ornare arcu. Non nisi est sit amet facilisis magna etiam tempor orci. Leo in vitae turpis massa. Sagittis eu volutpat odio facilisis mauris sit amet massa. Sed blandit libero volutpat sed.
-
-            Massa massa ultricies mi quis. Cras adipiscing enim eu turpis. Hac habitasse platea dictumst quisque sagittis purus. Eget duis at tellus at urna. Eget nullam non nisi est sit amet facilisis magna etiam. Vivamus at augue eget arcu. Ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat. Duis tristique sollicitudin nibh sit amet. Pellentesque elit eget gravida cum sociis natoque. Elit duis tristique sollicitudin nibh sit amet commodo. Eget gravida cum sociis natoque penatibus et magnis. Viverra accumsan in nisl nisi scelerisque eu. Accumsan tortor posuere ac ut consequat semper viverra nam.
-
-            Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem dolor sed viverra. Consectetur adipiscing elit ut aliquam purus sit. Laoreet non curabitur gravida arcu. Mattis nunc sed blandit libero. Eget duis at tellus at. Sit amet tellus cras adipiscing enim eu turpis egestas. Pulvinar pellentesque habitant morbi tristique senectus et netus. Ut venenatis tellus in metus vulputate eu scelerisque. Amet purus gravida quis blandit. Risus nec feugiat in fermentum posuere urna nec tincidunt praesent. Integer malesuada nunc vel risus commodo viverra maecenas.
+            <div class="col-md-12 statements-log scrollBar">
+                <crowdserve-event-row v-for="event in events" :event="event"></crowdserve-event-row>
             </div>
           </div>
           <div class="row">

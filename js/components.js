@@ -57,8 +57,65 @@ Vue.component('eth-address-output', {
       }
     }
   },
-  template: "<a tabindex=0 data-trigger='focus' data-toggle='popover' data-placement='bottom' data-html='true' :data-content='popoverHtml' style='cursor:pointer; outline:none;'>{{formattedAddress}}</a>"
+  template: "<a tabindex=0 data-container='body' data-trigger='focus' data-toggle='popover' data-placement='bottom' data-html='true' :data-content='popoverHtml' style='cursor:pointer; outline:none;'>{{formattedAddress}}</a>"
 });
+//ether-output helper function
+function copyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+
+    //
+    // *** This styling is an extra step which is likely not required. ***
+    //
+    // Why is it here? To ensure:
+    // 1. the element is able to have focus and selection.
+    // 2. if element was to flash render it has minimal visual impact.
+    // 3. less flakyness with selection and copying which **might** occur if
+    //    the textarea element is not visible.
+    //
+    // The likelihood is the element won't even render, not even a flash,
+    // so some of these are just precautions. However in IE the element
+    // is visible whilst the popup box asking the user for permission for
+    // the web page to copy to the clipboard.
+    //
+
+    // Place in top-left corner of screen regardless of scroll position.
+    textArea.style.position = 'fixed';
+    textArea.style.top = 0;
+    textArea.style.left = 0;
+
+    // Ensure it has a small width and height. Setting to 1px / 1em
+    // doesn't work as this gives a negative w/h on some browsers.
+    textArea.style.width = '2em';
+    textArea.style.height = '2em';
+
+    // We don't need padding, reducing the size if it does flash render.
+    textArea.style.padding = 0;
+
+    // Clean up any borders.
+    textArea.style.border = 'none';
+    textArea.style.outline = 'none';
+    textArea.style.boxShadow = 'none';
+
+    // Avoid flash of white box if rendered for any reason.
+    textArea.style.background = 'transparent';
+
+
+    textArea.value = text;
+
+    document.body.appendChild(textArea);
+
+    textArea.select();
+
+    try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Copying text command was ' + msg);
+    } catch (err) {
+        console.log('Oops, unable to copy');
+    }
+
+    document.body.removeChild(textArea);
+}
 
 //outputs an Ether value
 //first six decimals in Ether, next six in Gwei, last six in wei
@@ -98,17 +155,17 @@ Vue.component('contract-state-output', {
       if (this.state == 0)
         return "#ccffcc";
       else if (this.state == 1)
-        return '#e85f33';
+        return '#f27e6a';
       else if (this.state == 2)
         return "#aaaaaa";
     }
   },
-  template: "<div class='well well-sm' style='display:inline-block;margin-bottom:0;color:black;width:215px;text-align:center;' v-bind:style='{backgroundColor:color}'><h3 style='margin-top:0;margin-bottom:0'>{{formattedState}}<span v-if='preview'> (Preview)</span></h3></div>"
+  template: "<div class='well well-sm' style='display:inline-block;margin-bottom:0;color:black;width:250px;text-align:center;' v-bind:style='{backgroundColor:color}'><h3 style='margin-top:0;margin-bottom:0'>{{formattedState}}<span v-if='preview'> (Preview)</span></h3></div>"
 });
 
 //outputs information about the autorelease of the burnable payment
-Vue.component('autorelease-output', {
-  props: ['state', 'autoreleaseInterval', 'autoreleaseTime'],
+Vue.component('state-time-output', {
+  props: ['state', 'previewEndTime', 'roundEndTime'],
   data: function() {
     return {
       now: Math.floor(Date.now()/1000),
@@ -118,39 +175,84 @@ Vue.component('autorelease-output', {
   methods: {
     calculate: function() {
       this.now = Math.floor(Date.now()/1000);
-
       //determine display state
-      if (this.state == 0 || this.state == 2) {
-        this.displayState = 'interval';
+      if (this.state == 0) {
+        this.displayState = 'Active';
       }
-      else if (this.state == 1 && this.autoreleaseTime > this.now) {
-        this.displayState = 'countdown';
+      else if (this.state == 1) {
+        this.displayState = 'Inactive';
       }
-      else if (this.state == 1 && this.autoreleaseTime <= this.now) {
-        this.displayState = 'countdownDone';
+      else if (this.state == 2) {
+        this.displayState = 'Ending';
       }
     }
   },
   computed: {
     labelText: function() {
-      if (this.displayState == 'interval')
-        return "Autorelease Interval:<br>";
-      else if (this.displayState == 'countdown')
-        return "Autorelease in<br>";
-      else if (this.displayState == 'countdownDone')
-        return "Autorelease available!";
+      if (this.displayState == 'Active' || this.displayState == 'Ending') {
+        return "Preview ends in: " + this.previewTimeText +'</br>Round ends in: ' + this.roundEndTimeText;
+      }
+      else if (this.displayState == 'Inactive') {
+        return "Preview period has not started.<br>Round has not started.";
+      }
     },
-    timeText: function() {
-      if (this.displayState == 'interval') {
-        return humanizeDuration(this.autoreleaseInterval*1000, {largest:2});
-        }
-      else if (this.displayState == 'countdown') {
-        return humanizeDuration((this.autoreleaseTime - this.now)*1000, {largest:2});
-        }
+    previewTimeText: function() {
+      var interval = (this.previewEndTime-this.now )*1000;
+      if (interval <= 0) {
+        return "ended";
+      } else {
+        return humanizeDuration(interval, {largest:2});
+      }
+    },
+    roundEndTimeText: function(){
+      var interval = (this.roundEndTime - this.now )*1000;
+      if (interval <= 0) {
+        return "ended";
+      } else {
+        return humanizeDuration(interval, {largest:2});
+      }
     }
   },
   mounted: function() {
     this.calculate();
   },
-  template: "<div class='well well-sm text-left' style='margin-bottom:0;display:flex;justify-content:center;flex-direction:column;background-color:#ffdd99;width:160px;height:60px;'><span  v-html='labelText'></span>{{timeText}}</div>"
+  template: "<div class='well well-sm text-left' style='margin-bottom:0;display:flex;justify-content:center;flex-direction:column;background-color:#ffdd99;width:250px;height:60px;' v-html='labelText'></div>"
+});
+
+Vue.component('crowdserve-event-row', {
+  props: ['event'],
+  computed: {
+    formattedWorkerStatement: function() {
+      //return "Payer Statement<br><div class='well well-sm' style='margin-bottom:0;background-color:#aaffff'>"+xssFilters.inHTMLData(this.event.args.statement).replace(/(?:\r\n|\r|\n)/g, '<br />') + "</div>";
+    },
+    formattedContributorStatement: function() {
+      //return "Contributor Statement<br><div class='well well-sm' style='margin-bottom:0;background-color:#aaffff'>"+xssFilters.inHTMLData(this.event.args.statement).replace(/(?:\r\n|\r|\n)/g, '<br />') + "</div>";
+    }
+  },
+  template:
+`
+<div v-if="this.event.event == 'RoundBegun'" align='center'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#ccffcc;display:inline-block'>Round has begun.</div></div>
+<div v-else-if="this.event.event == 'RoundEnding'" align='center'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#f27e6a;display:inline-block'>Round has entered the ending phase.</div></div>
+<div v-else-if="this.event.event == 'RoundEnded'" align='center'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#aaaaaa;display:inline-block'>Round has ended.</div></div>
+<div v-else-if="this.event.event == 'Contribution'" align='right'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#dbdbff;display:inline-block'><eth-address-output :shorten-to=10 :address='event.args.contributor'></eth-address-output> contributed <ether-output :wei='event.args.amount'></ether-output>.</div></div>
+<div v-else-if="this.event.event == 'FundsRecalled'" align='right'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#dbdbff;display:inline-block;max-width:50%;'><eth-address-output :shorten-to=10 :address='event.args.contributor'></eth-address-output> recalled <ether-output :wei='event.args.amountReturned'></ether-output><span v-if='event.args.message.length>0'> and said:<div v-html='event.args.message' class="well well-sm" style='background-color:#ccccff;margin-top:10px;'></div></span></div></div>
+<div v-else-if="this.event.event == 'ContributorStatement'" align='right'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#dbdbff;display:inline-block;max-width:50%'><eth-address-output :shorten-to=10 :address='event.args.contributor'></eth-address-output> said: <div class='well well-sm' style='background-color:#ccccff;margin-top:10px;'>{{event.args.message}}</div></div></div>
+<div v-else-if="this.event.event == 'WorkerStatement'" align='left'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#ccffff;display:inline-block;max-width:50%'>Worker said: <div class='well well-sm' style='background-color:#afffff;margin-top:10px;'>{{event.args.message}}</div></div></div>
+<div v-else-if="this.event.event == 'Transfer'" align='center'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#dddddd;display:inline-block'><eth-address-output :shorten-to=10 :address='event.args.from'></eth-address-output> transfered <ether-output :wei='event.args.value'></ether-output> to <eth-address-output :shorten-to=10 :address='event.args.to'></eth-address-output>.</div></div>
+`
+});
+
+
+Vue.component('blocknum-output', {
+  props: ['blocknum','timestamp'],
+  computed: {
+    formattedBlocknum: function() {
+      var blocknumStr = this.blocknum.toString();
+      return blocknumStr.slice(-9,-6) +"_"+ blocknumStr.slice(-6,-3) +"_"+ blocknumStr.slice(-3);
+    },
+    formattedTimestamp: function() {
+      return moment.unix(this.timestamp).format("YYYY.MM.DD HH:mm");
+    }
+  },
+  template: `<span style="font-size:1.25rem">@block {{formattedBlocknum}} (~{{formattedTimestamp}})</span>`
 });
