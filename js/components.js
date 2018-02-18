@@ -216,7 +216,7 @@ Vue.component('state-time-output', {
   mounted: function() {
     this.calculate();
   },
-  template: "<div class='well well-sm text-left' style='margin-bottom:0;display:flex;justify-content:center;flex-direction:column;background-color:#ffdd99;width:250px;height:60px;' v-html='labelText'></div>"
+  template: "<div style='display:inline-block;'><div class='well well-sm text-left' style='margin-bottom:0;display:flex;justify-content:center;flex-direction:column;background-color:#ffdd99;width:250px;height:60px;' v-html='labelText'></div></div>"
 });
 
 Vue.component('crowdserve-event-row', {

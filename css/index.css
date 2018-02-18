@@ -10,7 +10,7 @@ html {
 
 body {
   box-sizing: border-box;
-  background-color: #1F3C5A;/*#cbd3db;*//*#FAFAFA;*/
+  background-color: #1F3C5A;
   overflow: auto;
   height: 100%;
   position:absolute;
@@ -24,13 +24,30 @@ body {
   margin: 25px 0;
 }
 
+h1 {
+  font-size:50px;
+  font-weight:bold;
+}
+
 .site-main {
   margin: 0 10%;
 }
 
+.contract-info {
+   display:flex;
+}
+
 .contract-state-time {
+  flex: 0 1 140px;
+  margin-right:40px;
+  margin-left: 20px;
+  margin-top: 25px;
   height: 100px;
-  margin-top:25px;
+}
+
+.proposal {
+  flex: 1;
+  margin-right:20px;
 }
 
 .proposal-panel {
@@ -77,4 +94,31 @@ body {
   min-height: 100px;
   max-height: 400px;
   overflow-y: auto;
+}
+
+/*bootsrap md size is 992 and up*/
+@media (max-width: 991px) {
+  h1 {
+    font-size: 47px;
+  }
+
+  .contract-info {
+    display: block;
+    text-align: center;
+  }
+
+  .proposal {
+    margin-top: 50px;
+    margin-left: 20px;
+  }
+
+  .statements {
+    margin-top:400px;
+  }
+}
+
+@media(max-width:500px){
+  body{
+    background-color: red;
+  }
 }

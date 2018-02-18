@@ -23,7 +23,7 @@
 
     <div class="container-fluid site-main">
       <div class="header">
-        <div class="title" ><h1 style='font-weight:bold;font-size:50px;'><span style="color:#FFAF03;">Crypto</span><span class='stroke' style="color:#F2F2F2">primitive</span></h1></div>
+        <div class="title" ><h1><span style="color:#FFAF03;">Crypto</span><span class='stroke' style="color:#F2F2F2">primitive</span></h1></div>
 
         <div id="navbar"></div>
       </div>
@@ -50,17 +50,14 @@
       </div> -->
       <div id="browseVue">
         <h2 class= "text-center" style="margin-top: 40px;color:#F2F2F2">Crowdserve Interface</h2>
-        <div class="contract-info">
-          <div class="row well well-sm">
-            <div class="col-md-3">
-              <div class="contract-state-time">
-                <contract-state-output  :state='contractState' :preview='contractPreview'></contract-state-output>
-                <state-time-output style="margin-top:20px;":state='contractState' :preview-end-time='previewEndTime' :round-end-time='roundEndTime'></state-time-output>
-              </div>
-            </div>
-            <div class="col-md-9">
-              <div class="panel panel-primary proposal-panel" >
-                <div class="panel-heading">Proposal</div>
+        <div class="row well well-sm contract-info">
+          <div class="contract-state-time">
+            <contract-state-output  :state='contractState' :preview='contractPreview'></contract-state-output>
+            <div><state-time-output style="margin-top:20px;":state='contractState' :preview-end-time='previewEndTime' :round-end-time='roundEndTime'></state-time-output></div>
+          </div>
+          <div class="proposal" >
+            <div class="panel panel-primary proposal-panel" >
+              <div class="panel-heading">Proposal</div>
                 <div class="panel-body">
                   <div class='proposal-body scrollBar'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Scelerisque viverra mauris in aliquam sem. Faucibus scelerisque eleifend donec pretium vulputate sapien. Eget est lorem ipsum dolor sit. Id diam maecenas ultricies mi eget mauris pharetra. Nulla facilisi nullam vehicula ipsum. Vitae congue mauris rhoncus aenean vel elit scelerisque. Arcu ac tortor dignissim convallis aenean. Nascetur ridiculus mus mauris vitae ultricies leo integer malesuada. In vitae turpis massa sed elementum tempus egestas sed sed. Est sit amet facilisis magna etiam tempor orci. Sollicitudin nibh sit amet commodo nulla facilisi nullam. Tempus iaculis urna id volutpat lacus laoreet.
 
@@ -76,7 +73,6 @@ Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem 
             </div>
           </div>
         </div>
-      </div>
         <div class="contributor-interface">
           <div class="well well-sm row">
             <div class="col-md-6">
@@ -94,17 +90,17 @@ Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem 
                 <div class="well well-sm" style="background-color:white;">
                   <div class="individual-contributions-centering">
                     <h3 class="text-center">Your contributions</h3>
-                    <div style="text-align:center; margin-top: 20px; margin-bottom:20px;font-size:20px;">
+                    <div style="text-align:center; margin-top: 20px;margin-left: 20px;font-size:20px;">
                       <ether-output :wei="100000000000"></ether-output>
                     </div>
-                    <div class="row">
-                      <div class="col-md-offset-1 col-md-3 text-left">
+                    <div class="row" style="display:flex;justify-content:space-evenly; margin-top:20px">
+                      <div class="">
                         <button class="btn btn-primary" data-toggle="modal" data-target="#contribute">Contribute</button>
                       </div>
-                      <div class="col-md-offset-1 col-md-3 text-center">
+                      <div class="">
                         <button class="btn btn-primary" data-toggle="modal" data-target="#transfer">Transfer</button>
                       </div>
-                      <div class="col-md-3 text-right">
+                      <div class="">
                         <button class="btn btn-primary" data-toggle="modal" data-target="#recall">Recall</button>
                       </div>
                     </div>
@@ -120,9 +116,9 @@ Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem 
                 <crowdserve-event-row v-for="event in events" :event="event"></crowdserve-event-row>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-9"><input class="form-control" type="text" placeholder='Type your statement'></div>
-            <div class="col-md-3"><button class='btn btn-primary' onclick="sendStatementFromForm()">Make statement</button></div>
+          <div class="row" style="display:flex;">
+            <div class="" style="flex:1;"><input class="form-control" type="text" placeholder='Type your statement'></div>
+            <div class="" style="flex:0 1; margin-left: 20px;"><button class='btn btn-primary' onclick="sendStatementFromForm()">Make statement</button></div>
           </div>
         </div>
       </div>
