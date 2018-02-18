@@ -22,7 +22,7 @@ $(document).ready(function(){
         },
         theme:"inset-dark",
         scrollInertia:150,
-        autoHideScrollbar:true
+        autoHideScrollbar:true,
       });
     }
   });

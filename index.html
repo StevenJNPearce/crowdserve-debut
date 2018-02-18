@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Crowdserve - Interface</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--<link rel="shortcut icon" href="favicon.ico" />-->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="./css/jquery.mCustomScrollbar.min.css">
@@ -20,7 +20,13 @@
 
   </head>
   <body>
-    <div class="container-fluid site">
+
+    <div class="container-fluid site-main">
+      <div class="header">
+        <div class="title" ><h1 style='font-weight:bold;font-size:50px;'><span style="color:#FFAF03;">Crypto</span><span class='stroke' style="color:#F2F2F2">primitive</span></h1></div>
+
+        <div id="navbar"></div>
+      </div>
       <!-- warnings
       <div id="noProviderWarningDiv" hidden='true' align='center'>
         <div class="alert alert-warning" style='display:inline-block; margin-top:5rem'>
@@ -42,14 +48,8 @@
           <p>You are currently unable to initiate any commands. Make sure Metamask is unlocked and refresh.</p>
         </div>
       </div> -->
-
-
-      <div class="header">
-        <h1>Cryptoprimitive</h1>
-        <h2>Crowdserve Interface</h2>
-        <div id="navbar"></div>
-      </div>
       <div id="browseVue">
+        <h2 class= "text-center" style="margin-top: 40px;color:#F2F2F2">Crowdserve Interface</h2>
         <div class="contract-info">
           <div class="row well well-sm">
             <div class="col-md-3">
@@ -59,10 +59,10 @@
               </div>
             </div>
             <div class="col-md-9">
-              <div class="panel panel-primary">
+              <div class="panel panel-primary proposal-panel" >
                 <div class="panel-heading">Proposal</div>
                 <div class="panel-body">
-                  <div class='proposal scrollBar'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Scelerisque viverra mauris in aliquam sem. Faucibus scelerisque eleifend donec pretium vulputate sapien. Eget est lorem ipsum dolor sit. Id diam maecenas ultricies mi eget mauris pharetra. Nulla facilisi nullam vehicula ipsum. Vitae congue mauris rhoncus aenean vel elit scelerisque. Arcu ac tortor dignissim convallis aenean. Nascetur ridiculus mus mauris vitae ultricies leo integer malesuada. In vitae turpis massa sed elementum tempus egestas sed sed. Est sit amet facilisis magna etiam tempor orci. Sollicitudin nibh sit amet commodo nulla facilisi nullam. Tempus iaculis urna id volutpat lacus laoreet.
+                  <div class='proposal-body scrollBar'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Scelerisque viverra mauris in aliquam sem. Faucibus scelerisque eleifend donec pretium vulputate sapien. Eget est lorem ipsum dolor sit. Id diam maecenas ultricies mi eget mauris pharetra. Nulla facilisi nullam vehicula ipsum. Vitae congue mauris rhoncus aenean vel elit scelerisque. Arcu ac tortor dignissim convallis aenean. Nascetur ridiculus mus mauris vitae ultricies leo integer malesuada. In vitae turpis massa sed elementum tempus egestas sed sed. Est sit amet facilisis magna etiam tempor orci. Sollicitudin nibh sit amet commodo nulla facilisi nullam. Tempus iaculis urna id volutpat lacus laoreet.
 
 Adipiscing tristique risus nec feugiat in. In ante metus dictum at tempor commodo. Montes nascetur ridiculus mus mauris vitae ultricies leo. Faucibus interdum posuere lorem ipsum dolor sit amet. Orci phasellus egestas tellus rutrum tellus. Id neque aliquam vestibulum morbi. In vitae turpis massa sed elementum. Lobortis mattis aliquam faucibus purus in massa tempor. Eu ultrices vitae auctor eu augue. Neque viverra justo nec ultrices dui. Sit amet justo donec enim.
 
@@ -80,31 +80,33 @@ Purus in massa tempor nec feugiat nisl. Vel pharetra vel turpis nunc eget lorem 
         <div class="contributor-interface">
           <div class="well well-sm row">
             <div class="col-md-6">
-              <div class="total-contributions">
+              <div class="total-contributions well well-sm" style="background-color:white;font-size: 20px">
                 <div class="centering">
-                  <div class="total-contributed">+ <ether-output :wei="100000000000"></ether-output> contributed</div>
-                  <div class="total-recalled">- <ether-output :wei="100000000000"></ether-output> recalled</div>
-                  <div class="line" style='height:2px;background-color:black;width:150px;'></div>
+                  <div class="total-contributed"><span style='color:#22d822'>+</span> <ether-output :wei="100000000000"></ether-output> contributed</div>
+                  <div class="total-recalled"><span style="color:#dd250d;margin-left:3px;">-</span> <ether-output :wei="100000000000"></ether-output> recalled</div>
+                  <div class="line" style='height:2px;background-color:black;width:210px;'></div>
                   <div class="total-supply">Supply: <ether-output :wei="100000000000"></ether-output></div>
                 </div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="individual-contributions">
-                <div class="well well-sm">
-                  <h3 class="text-center">Your contributions</h3>
-                  <div style="text-align:center">
-                    <ether-output :wei="100000000000"></ether-output>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-offset-1 col-md-3 text-left">
-                      <button class="btn btn-primary" data-toggle="modal" data-target="#contribute">Contribute</button>
+                <div class="well well-sm" style="background-color:white;">
+                  <div class="individual-contributions-centering">
+                    <h3 class="text-center">Your contributions</h3>
+                    <div style="text-align:center; margin-top: 20px; margin-bottom:20px;font-size:20px;">
+                      <ether-output :wei="100000000000"></ether-output>
                     </div>
-                    <div class="col-md-offset-1 col-md-3 text-center">
-                      <button class="btn btn-primary" data-toggle="modal" data-target="#transfer">Transfer</button>
-                    </div>
-                    <div class="col-md-3 text-right">
-                      <button class="btn btn-primary" data-toggle="modal" data-target="#recall">Recall</button>
+                    <div class="row">
+                      <div class="col-md-offset-1 col-md-3 text-left">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#contribute">Contribute</button>
+                      </div>
+                      <div class="col-md-offset-1 col-md-3 text-center">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#transfer">Transfer</button>
+                      </div>
+                      <div class="col-md-3 text-right">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#recall">Recall</button>
+                      </div>
                     </div>
                   </div>
                 </div>

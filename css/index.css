@@ -10,27 +10,34 @@ html {
 
 body {
   box-sizing: border-box;
-  background-color: #f2f4f7;
+  background-color: #1F3C5A;/*#cbd3db;*//*#FAFAFA;*/
   overflow: auto;
   height: 100%;
   position:absolute;
 }
 
-.site {
-  margin-top: 1%;
-  margin: 5%;
-}
 
 .header {
+  width:100%;
+  overflow:hidden;
   text-align: center;
-  margin-bottom: 30px;
+  margin: 25px 0;
+}
+
+.site-main {
+  margin: 0 10%;
 }
 
 .contract-state-time {
   height: 100px;
+  margin-top:25px;
 }
 
-.proposal {
+.proposal-panel {
+  margin-top: 25px;
+}
+
+.proposal-body {
   margin: 10px;
   padding-right: 20px;
   min-height:100px;
@@ -45,18 +52,24 @@ body {
 .total-contributions {
   height: 200px;
   position:relative;
+  margin-top: 20px;
 }
 
 .total-contributions > div {
-  margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
+.individual-contributions  > div{
+  margin-top: 20px;
+  height: 200px;
+}
+
 .statements  {
-  margin-top: 200px;
+  margin-top: 180px;
+  margin-bottom: 50px;
   width: 100%;
 }
 
