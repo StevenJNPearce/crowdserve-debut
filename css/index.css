@@ -13,7 +13,9 @@ body {
   background-color: #1F3C5A;
   overflow: auto;
   height: 100%;
+  width:100%;
   position:absolute;
+
 }
 
 
@@ -31,10 +33,20 @@ h1 {
 
 .site-main {
   margin: 0 10%;
+  text-align: center;
+}
+
+.site-main  {
+
 }
 
 .contract-info {
-   display:flex;
+  margin-bottom: 5px;
+}
+
+.flex-container {
+  display:flex;
+  justify-content: space-between;
 }
 
 .contract-state-time {
@@ -67,6 +79,7 @@ h1 {
 
 .contributor-interface {
   height: 100px;
+  width: 100%;
 }
 
 .total-contributions {
@@ -103,6 +116,10 @@ h1 {
   margin:0 15px;
 }
 
+.statements-input {
+  margin-top: 25px;
+}
+
 
 #mCSB_1_container {
   margin: 0;
@@ -112,15 +129,26 @@ h1 {
 }
 
 
+/*max-width for large screens*/
+.contract-info,
+.contributor-interface,
+ .statements {
+  max-width: 1100px;
+  display: inline-block;
+}
+
 /*bootsrap md size is 992 and up*/
 @media (max-width: 991px) {
   h1 {
     font-size: 47px;
   }
 
-  .contract-info {
+  .flex-container {
     display: block;
-    text-align: center;
+  }
+
+  .statements{
+    margin-top: 125px;
   }
 
   .proposal {
@@ -128,10 +156,6 @@ h1 {
     margin-right:20px;
     margin-top: 55px;
     margin-bottom: 25px;
-  }
-
-  .statements {
-    margin-top:400px;
   }
 
   .chat-container{
@@ -158,7 +182,6 @@ h1 {
   }
 
   .contract-info {
-    display: block;
     text-align: center;
   }
 
