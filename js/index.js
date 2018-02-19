@@ -9,6 +9,9 @@ $(document).ready(function(){
       events: []
     },
     updated: function() {
+      if (window.matchMedia("(max-width: 500px)").matches) {
+        $('.popover-bubble > span').data('container','body');
+      }
       $('[data-toggle="popover"]')
         .on('click',function(e){
           e.preventDefault();
@@ -27,15 +30,21 @@ $(document).ready(function(){
     }
   });
 
-  //main scrollbars
-  $('body').mCustomScrollbar({
-    scrollButtons: {
-      enable:true
-    },
-    theme:"inset-dark",
-    scrollInertia:150,
-    autoHideScrollbar:false
-  });
+  resize();
+  $(window).resize(resize());
+  function resize(){
+    if (!window.matchMedia("(max-width: 700px)").matches) {
+      //main scrollbars
+      $('body').mCustomScrollbar({
+        scrollButtons: {
+          enable:true
+        },
+        theme:"inset-dark",
+        scrollInertia:150,
+        autoHideScrollbar:false
+      });
+    }
+  }
 
 
   //dummy values for testing purposes

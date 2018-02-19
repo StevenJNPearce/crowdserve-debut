@@ -47,7 +47,7 @@ h1 {
 
 .proposal {
   flex: 1;
-  margin-right:20px;
+  margin-right: 20px;
 }
 
 .proposal-panel {
@@ -55,11 +55,14 @@ h1 {
 }
 
 .proposal-body {
-  margin: 10px;
-  padding-right: 20px;
+
   min-height:100px;
   max-height:200px;
   overflow-y: auto;
+}
+
+.proposal-text {
+  margin: 0 25px;
 }
 
 .contributor-interface {
@@ -96,6 +99,19 @@ h1 {
   overflow-y: auto;
 }
 
+.chat-container{
+  margin:0 15px;
+}
+
+
+#mCSB_1_container {
+  margin: 0;
+}
+#mCSB_2_container {
+  margin: 0;
+}
+
+
 /*bootsrap md size is 992 and up*/
 @media (max-width: 991px) {
   h1 {
@@ -108,17 +124,56 @@ h1 {
   }
 
   .proposal {
-    margin-top: 50px;
-    margin-left: 20px;
+    margin-left:20px;
+    margin-right:20px;
+    margin-top: 55px;
+    margin-bottom: 25px;
   }
 
   .statements {
     margin-top:400px;
   }
+
+  .chat-container{
+    margin:0 20px;
+  }
 }
 
 @media(max-width:500px){
-  body{
-    background-color: red;
+  .header {
+    margin-top:20px;
+    margin-bottom: -20px;
   }
+
+  h1 {
+    font-size: 35px;
+  }
+
+  h2 {
+    font-size: 25px;
+  }
+
+  .site-main {
+    margin: 0px;
+  }
+
+  .contract-info {
+    display: block;
+    text-align: center;
+  }
+
+  .contract-state-time {
+    margin: 20px auto;
+  }
+
+  .proposal-text {
+   margin-right: 15px;
+   margin-left: 15px;
+  }
+
+  .statements-log {
+    padding: 10px;
+  }
+
+
 }
