@@ -13,7 +13,9 @@ body {
   background-color: #1F3C5A;
   overflow: auto;
   height: 100%;
+  width:100%;
   position:absolute;
+
 }
 
 
@@ -31,10 +33,20 @@ h1 {
 
 .site-main {
   margin: 0 10%;
+  text-align: center;
+}
+
+.site-main  {
+
 }
 
 .contract-info {
-   display:flex;
+  margin-bottom: 5px;
+}
+
+.flex-container {
+  display:flex;
+  justify-content: space-between;
 }
 
 .contract-state-time {
@@ -47,7 +59,7 @@ h1 {
 
 .proposal {
   flex: 1;
-  margin-right:20px;
+  margin-right: 20px;
 }
 
 .proposal-panel {
@@ -55,15 +67,19 @@ h1 {
 }
 
 .proposal-body {
-  margin: 10px;
-  padding-right: 20px;
+
   min-height:100px;
   max-height:200px;
   overflow-y: auto;
 }
 
+.proposal-text {
+  margin: 0 25px;
+}
+
 .contributor-interface {
   height: 100px;
+  width: 100%;
 }
 
 .total-contributions {
@@ -96,29 +112,91 @@ h1 {
   overflow-y: auto;
 }
 
+.chat-container{
+  margin:0 15px;
+}
+
+.statements-input {
+  margin-top: 25px;
+}
+
+
+#mCSB_1_container {
+  margin: 0;
+}
+#mCSB_2_container {
+  margin: 0;
+}
+
+
+/*max-width for large screens*/
+.contract-info,
+.contributor-interface,
+ .statements {
+  max-width: 1100px;
+  display: inline-block;
+}
+
 /*bootsrap md size is 992 and up*/
 @media (max-width: 991px) {
   h1 {
     font-size: 47px;
   }
 
-  .contract-info {
+  .flex-container {
     display: block;
-    text-align: center;
+  }
+
+  .statements{
+    margin-top: 125px;
   }
 
   .proposal {
-    margin-top: 50px;
-    margin-left: 20px;
+    margin-left:20px;
+    margin-right:20px;
+    margin-top: 55px;
+    margin-bottom: 25px;
   }
 
-  .statements {
-    margin-top:400px;
+  .chat-container{
+    margin:0 20px;
   }
 }
 
 @media(max-width:500px){
-  body{
-    background-color: red;
+  .header {
+    margin-top:20px;
+    margin-bottom: -20px;
   }
+
+  h1 {
+    font-size: 35px;
+  }
+
+  h2 {
+    font-size: 25px;
+  }
+
+  .site-main {
+    margin: 0px;
+  }
+
+  .contract-info {
+    text-align: center;
+  }
+
+  .contract-state-time {
+    margin: 20px auto;
+  }
+
+  .proposal-text {
+   margin-right: 15px;
+   margin-left: 15px;
+  }
+
+  .statements-log {
+    padding: 10px;
+  }
+
+
 }
