@@ -1,3 +1,6 @@
+const MAINNET_CROWDSERVE_ADDRESS = "";
+const ROPSTEN_CROWDSERVE_ADDRESS = "";
+const GANACHE_CROWDSERVE_ADDRESS = "0xe78a0f7e598cc8b0bb87894b0f60dd2a88d6a8ab";
 window.addEventListener(("load"), () => {
 
   // Checking i Web3 has been injected by the browser (Mist/MetaMask)
@@ -546,225 +549,218 @@ window.addEventListener(("load"), () => {
 ]);
 
   //Instantiate contract object from already deployed contract at given address
-  var CrowdServe = CrowdServeClass.at("0xe78a0f7e598cc8b0bb87894b0f60dd2a88d6a8ab");
-
-
-
+  var CrowdServe = CrowdServeClass.at(GANACHE_CROWDSERVE_ADDRESS);
 
   /////////Reading calls begin here/////////////////////////////////////////////////////
   //method to call all state variables of the contract, returns object with strings and integers
-  window.getFullState = (funct) => {
-    CrowdServe.getFullState((err, res) => {
-      if (err){
-        funct(err, undefined)
-      }
-      else {
-        var fullState = {};
-        // minPreviewInterval, minContribution, worker, state, inPreview, previewStageEndTime, roundEndTime, totalContributed, totalRecalled, totalSupply
-        fullState.minPreviewInterval = Number(new web3.BigNumber(res[0]));
-        fullState.minContribution = Number(new web3.fromWei(res[1]));
-        fullState.worker = res[2];
-        fullState.state = Number(res[3].toString());
-        fullState.inPreview = res[4];
-        fullState.previewStageEndTime = Number(web3.fromWei(res[5]));
-        fullState.roundEndTime = Number(web3.fromWei(res[6]));
-        fullState.totalContributed = Number(web3.fromWei(res[7]));
-        fullState.totalRecalled = Number(web3.fromWei(res[8]));
-        fullState.totalSupply = Number(web3.fromWei(res[9]));
-        funct(undefined, fullState);
-      }
+  window.csContract= {};
+
+  window.csContract.getFullState = () => {
+    return new Promise((resolve, reject) => {
+      CrowdServe.getFullState((err, res) => {
+        if (err){
+            reject(err);
+        }
+        else {
+          var fullState = {
+          // minPreviewInterval, minContribution, worker, state, inPreview, previewStageEndTime, roundEndTime, totalContributed, totalRecalled, totalSupply
+          minPreviewInterval: Number(new web3.BigNumber(res[0])),
+          minContribution: Number(new web3.BigNumber(res[1])),
+          worker: res[2],
+          inPreview: res[4],
+          state: stateOutput(Number(res[3]), res[4]),
+          previewStageEndTime: Number(new web3.BigNumber(res[5])),
+          roundEndTime: Number(new web3.BigNumber(res[6])),
+          totalContributed: Number(new web3.BigNumber(res[7])),
+          totalRecalled: Number(new web3.BigNumber(res[8])),
+          totalSupply: Number(new web3.BigNumber(res[9]))
+        };
+          resolve(fullState);
+        }
+      });
     });
   }
 
   //method to read the current balance of erc223 tokens in contract
-  window.balanceOf = (address, funct) => {
-    CrowdServe.balanceOf(address, (err, res) => {
-      if(err){
-        funct(err, undefined);
-      }
-      else{
-        funct(undefined, Number(new web3.BigNumber(res)));
-      }
+  window.csContract.balanceOf = (address) => {
+    return new Promise((resolve, reject) => {
+      CrowdServe.balanceOf(address, (err, res) => {
+        if(err){
+          reject(err);
+        }
+        else{
+          var balance = Number(new web3.BigNumber(res));
+          resolve(balance);
+        }
+      })
     });
   }
-
-  //method to transform state integer to string representation
-  window.stateOutput = (stateInteger, inPreview) => {
-    switch (stateInteger){
-      case 0:
-        if (inPreview){
-          return "Active (Preview)"
-        } else{
-          return "Active";
-        }
-        break;
-      case 1:
-        return "Ending";
-        break;
-      case 2:
-        return "Inactive";
-        break;
-      default:
-        return undefined;
-        break;
-    }
-  }
-
   /////////Event Reading calls begin here//////////////////////////////////////
   // would get all past logs again.
-  window.fullEventList = (funct) => {
-    // watch for an event with {some: 'args'}
-    var allEvents = web3.eth.filter({address: CrowdServe.address, fromBlock: 0, toBlock: 'latest'});
-    allEvents.get((err, res) => {
-      if (err){
-        funct(err, undefined);
-      } else {
-        var topicNames = [];
-        var i = 0;
-        res.forEach((element) => {
-          var topic = element.topics[0];
-          console.log(element);
-          console.log(element.data);
-          topicNames[i] = decodeTopic(topic, CrowdServeClass.abi);
-          i++;
-        });
-        funct(undefined, topicNames);
-      }
+  window.csContract.getAllEvents = () => {
+    return new Promise((resolve, reject) => {
+      var allEvents = CrowdServe.allEvents({fromBlock: 0, toBlock: 'latest'});
+      allEvents.get((err, res) => {
+        if(err){
+          reject(err);
+        } else{
+          var allEventsArray = [];
+          res.forEach((element) => {
+            var parsedArgsObject = parseEventArguments(element.args);
+            var eventObject = {event: element.event, transactionHash: element.transactionHash, args: parsedArgsObject};
+            allEventsArray.push(eventObject);
+          });
+          resolve(allEventsArray);
+        }
+      });
     });
   }
 
-
   // event RoundBegun(string proposalString, uint previewStageEndTime, uint roundEndTime);
-  window.getRoundBegunEvents = (funct) => {
-    var roundBegun = CrowdServe.RoundBegun({fromBlock: 0, toBlock: 'latest'});
-    roundBegun.get((err, res) => {
-      if(err){
-        funct(err, undefined);
-      }
-      else{
-        var roundBegunEventsArray = [];
-        res.forEach((element) => {
-          var parsedArguments = {previewStageEndTime: Number(new web3.BigNumber(element.args.previewStageEndTime)), proposalString: element.args.proposalString,
-            roundEndTime: Number(new web3.BigNumber(element.args.roundEndTime))}
-          var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
-          roundBegunEventsArray.push(eventObject);
-        });
-        funct(undefined, roundBegunEventsArray);
-      }
+  window.csContract.getRoundBegunEvents = () => {
+    return new Promise((resolve, reject) => {
+      var roundBegun = CrowdServe.RoundBegun({fromBlock: 0, toBlock: 'latest'});
+      roundBegun.get((err, res) => {
+        if(err){
+          reject(err);
+        }
+        else{
+          var roundBegunEventsArray = [];
+          res.forEach((element) => {
+            var parsedArguments = {previewStageEndTime: Number(new web3.BigNumber(element.args.previewStageEndTime)), proposalString: element.args.proposalString,
+              roundEndTime: Number(new web3.BigNumber(element.args.roundEndTime))}
+            var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
+            roundBegunEventsArray.push(eventObject);
+          });
+          resolve(roundBegunEventsArray);
+        }
+      });
     });
   }
 
   // event RoundEnding();
-  window.getRoundEndingEvents = (funct) => {
-    var roundEnding = CrowdServe.RoundEnding({fromBlock: 0, toBlock: 'latest'});
-    roundEnding.get((err, res) => {
-      if(err){
-        funct(err, undefined);
-      }else{
-        var roundEndingEventsArray = [];
-        res.forEach((element) => {
-          var eventObject = {event: element.event, transactionHash: element.transactionHash}
-          roundEndingEventsArray.push(eventObject);
-        });
-        funct(undefined, roundEndingEventsArray);
-      }
+  window.csContract.getRoundEndingEvents = () => {
+    return new Promise((resolve, reject) => {
+      var roundEnding = CrowdServe.RoundEnding({fromBlock: 0, toBlock: 'latest'});
+      roundEnding.get((err, res) => {
+        if(err){
+          reject(err);
+        }else{
+          var roundEndingEventsArray = [];
+          res.forEach((element) => {
+            var eventObject = {event: element.event, transactionHash: element.transactionHash}
+            roundEndingEventsArray.push(eventObject);
+          });
+          resolve(roundEndingEventsArray);
+        }
+      });
     });
   }
 
   // event RoundEnded(uint amountRecalled, uint amountWithdrawn);
-  window.getRoundEndedEvents = (funct) => {
-    var roundEnded = CrowdServe.RoundEnded({fromBlock: 0, toBlock: 'latest'});
-    roundEnded.get((err, res) => {
-      if(err){
-        funct(err, undefined);
-      }else{
-        var roundEndedEventsArray = [];
-        res.forEach((element) => {
-          var parsedArguments = {amountRecalled: Number(new web3.BigNumber(element.args.amountRecalled)),
-            amountWithdrawn: Number(new web3.BigNumber(element.args.amountWithdrawn))}
-          var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
-          roundEndedEventsArray.push(eventObject);
-        });
-        funct(undefined, roundEndedEventsArray);
-      }
+  window.csContract.getRoundEndedEvents = () => {
+    return new Promise((resolve, reject) => {
+      var roundEnded = CrowdServe.RoundEnded({fromBlock: 0, toBlock: 'latest'});
+      roundEnded.get((err, res) => {
+        if(err){
+          reject(err);
+        }else{
+          var roundEndedEventsArray = [];
+          res.forEach((element) => {
+            var parsedArguments = {amountRecalled: Number(new web3.BigNumber(element.args.amountRecalled)),
+              amountWithdrawn: Number(new web3.BigNumber(element.args.amountWithdrawn))}
+            var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
+            roundEndedEventsArray.push(eventObject);
+          });
+          resolve(roundEndedEventsArray);
+        }
+      });
     });
   }
 
    // event Contribution(address contributor, uint amount);
-  window.getContributionEvents = (funct) => {
-    var contribution = CrowdServe.Contribution({fromBlock: 0, toBlock: 'latest'});
-    contribution.get((err, res) => {
-      if(err){
-        funct(err, undefined);
-      }
-      else{
-        var contributionEventsArray = [];
-        res.forEach((element) => {
-          var parsedArguments = {contributor: element.args.contributor, amount: Number(new web3.BigNumber(element.args.amount))}
-          var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
-          contributionEventsArray.push(eventObject);
-        });
-        funct(undefined, contributionEventsArray);
-      }
+  window.csContract.getContributionEvents = () => {
+    return new Promise((resolve, reject) => {
+      var contribution = CrowdServe.Contribution({fromBlock: 0, toBlock: 'latest'});
+      contribution.get((err, res) => {
+        if(err){
+          reject(err);
+        }
+        else{
+          var contributionEventsArray = [];
+          res.forEach((element) => {
+            var parsedArguments = {contributor: element.args.contributor, amount: Number(new web3.BigNumber(element.args.amount))}
+            var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
+            contributionEventsArray.push(eventObject);
+          });
+          resolve(contributionEventsArray);
+        }
+      });
     });
   }
 
   // event FundsRecalled(address contributor, uint amountBurned, uint amountReturned, string message);
-  window.getFundsRecalledEvents = (funct) => {
-    var fundsRecalled = CrowdServe.FundsRecalled({fromBlock: 0, toBlock: 'latest'});
-    fundsRecalled.get((err, res) => {
-      if(err){
-        funct(err, undefined);
-      }
-      else{
-        var fundsRecalledEventsArray = [];
-        res.forEach((element) => {
-          var parsedArguments = {contributor: element.args.contributor, amountBurned: Number(new web3.BigNumber(element.args.amountBurned)),
-            amountReturned: Number(new web3.BigNumber(element.args.amountReturned)), message: element.args.message}
-          var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
-          fundsRecalledEventsArray.push(eventObject);
-        });
-        funct(undefined, fundsRecalledEventsArray);
-      }
+  window.csContract.getFundsRecalledEvents = () => {
+    return new Promise((resolve, reject) => {
+      var fundsRecalled = CrowdServe.FundsRecalled({fromBlock: 0, toBlock: 'latest'});
+      fundsRecalled.get((err, res) => {
+        if(err){
+          reject(err);
+        }
+        else{
+          var fundsRecalledEventsArray = [];
+          res.forEach((element) => {
+            var parsedArguments = {contributor: element.args.contributor, amountBurned: Number(new web3.BigNumber(element.args.amountBurned)),
+              amountReturned: Number(new web3.BigNumber(element.args.amountReturned)), message: element.args.message}
+            var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
+            fundsRecalledEventsArray.push(eventObject);
+          });
+          resolve(fundsRecalledEventsArray);
+        }
+      });
     });
   }
 
   // event ContributorStatement(address contributor, uint amountBurned, string message);
-  window.getContributorStatementEvents = (funct) => {
-    var contributorStatement = CrowdServe.ContributorStatement({fromBlock: 0, toBlock: 'latest'});
-    contributorStatement.get((err, res) => {
-      if(err){
-        funct(err, undefined);
-      }
-      else{
-        var contributorStatementEventsArray = [];
-        res.forEach((element) => {
-          var parsedArguments = {contributor: element.args.contributor, amountBurned: Number(new web3.BigNumber(element.args.amountBurned)),
-            message: element.args.message}
-          var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
-          contributorStatementEventsArray.push(eventObject);
-        });
-        funct(undefined, contributorStatementEventsArray);
-      }
+  window.csContract.getContributorStatementEvents = () => {
+    return new Promise((resolve, reject) => {
+      var contributorStatement = CrowdServe.ContributorStatement({fromBlock: 0, toBlock: 'latest'});
+      contributorStatement.get((err, res) => {
+        if(err){
+          reject(err);
+        }
+        else{
+          var contributorStatementEventsArray = [];
+          res.forEach((element) => {
+            var parsedArguments = {contributor: element.args.contributor, amountBurned: Number(new web3.BigNumber(element.args.amountBurned)),
+              message: element.args.message}
+            var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
+            contributorStatementEventsArray.push(eventObject);
+          });
+          resolve(contributorStatementEventsArray);
+        }
+      });
     });
   }
 
   // event WorkerStatement(string message);
-  window.getWorkerStatementEvents = (funct) => {
-    var workerStatement = CrowdServe.WorkerStatement({fromBlock: 0, toBlock: 'latest'});
-    workerStatement.get((err, res) => {
-      if(err){
-        funct(err, undefined);
-      }
-      else{
-        var workerStatementEventsArray = [];
-        res.forEach((element) => {
-          var parsedArguments = {message: element.args.message}
-          var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
-          workerStatementEventsArray.push(eventObject);
-        });
-        funct(undefined, workerStatementEventsArray);
-      }
+  window.csContract.getWorkerStatementEvents = () => {
+    return new Promise((resolve, reject) => {
+      var workerStatement = CrowdServe.WorkerStatement({fromBlock: 0, toBlock: 'latest'});
+      workerStatement.get((err, res) => {
+        if(err){
+          reject(err);
+        }
+        else{
+          var workerStatementEventsArray = [];
+          res.forEach((element) => {
+            var parsedArguments = {message: element.args.message}
+            var eventObject = {args: parsedArguments, event: element.event, transactionHash: element.transactionHash}
+            workerStatementEventsArray.push(eventObject);
+          });
+          resolve(workerStatementEventsArray);
+        }
+      });
     });
   }
 
@@ -772,133 +768,127 @@ window.addEventListener(("load"), () => {
 
 /////////////////Transaction/Function calls begin here////////////////////////////////////////////////////////
   // function beginProjectRound(string proposalString, uint previewStageInterval, uint roundInterval)
-  window.beginProjectRound = (proposalString, previewStageInterval, roundInterval, funct) => {
-    CrowdServe.beginProjectRound(proposalString, previewStageInterval, roundInterval, (err, res) => {
-      if (err){
-        funct(err, undefined);
-      }
-      else {
-        funct(undefined, res);
-      }
-    })
+  window.csContract.beginProjectRound = (proposalString, previewStageInterval, roundInterval) => {
+    return new Promise((resolve, reject) => {
+      CrowdServe.beginProjectRound(proposalString, previewStageInterval, roundInterval, (err, res) => {
+        if (err){
+          reject(err);
+        }
+        else {
+          resolve(res);
+        }
+      })
+    });
   }
 
   //function transfer(address _to, uint _value, bytes _data)
-  window.transfer = (address, value, funct) => {
-    CrowdServe.transfer(address, value, (err, res) => {
-      if (err){
-        funct(err, undefined);
-      } else {
-        funct(undefined, res);
-      }
+  window.csContract.transfer = (address, value) => {
+    return new Promise((resolve, reject) => {
+      CrowdServe.transfer(address, value, (err, res) => {
+        if (err){
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
     });
   };
 
-  window.contribute = (amountInEth, funct) => {
-    CrowdServe.contribute({value: web3.toWei(amountInEth)}, (err, res) => {
-      if (err){
-        funct(err, undefined);
-      } else{
-        funct(undefined, res);
-      }
+  window.csContract.contribute = (amountInEth) => {
+    return new Promise((resolve, reject) => {
+      CrowdServe.contribute({value: web3.toWei(amountInEth)}, (err, res) => {
+        if (err){
+          reject(err);
+        } else{
+          resolve(res);
+        }
+      });
     });
   }
 
-  window.recall = (amountInEth, message, funct) => {
-    CrowdServe.recall(amountInEth, message, (err,res) => {
-      if (err){
-        funct(err, undefined);
-      } else{
-        funct(undefined, res);
-      }
+  window.csContract.recall = (amountInEth, message) => {
+    return new Promise((resolve, reject) => {
+      CrowdServe.recall(amountInEth, message, (err,res) => {
+        if (err){
+          reject(err);
+        } else{
+          resolve(res);
+        }
+      });
     });
   }
 
-  window.contributorStatement = (burnAmout, statement, funct) => {
-    CrowdServe.contributorStatement(statement, (err,res) => {
-      if(err){
-        funct(err, undefined);
-      } else{
-        funct(undefined, res);
-      }
+  window.csContract.setContributorStatement = (burnAmout, statement) => {
+    return new Promise((resolve, reject) => {
+      CrowdServe.contributorStatement(statement, (err,res) => {
+        if(err){
+          reject(err);
+        } else{
+          resolve(res);
+        }
+      });
     });
   }
 
-  window.workerStatement = (statement, funct) => {
-    CrowdServe.workerStatement(statement, (err,res) => {
-      if(err){
-        funct(err, undefined);
-      } else{
-        funct(undefined, res);
-      }
+  window.csContract.setWorkerStatement = (statement) => {
+    return new Promise((resolve, reject) => {
+      CrowdServe.workerStatement(statement, (err,res) => {
+        if(err){
+          reject(err);
+        } else{
+          resolve(res);
+        }
+      });
     });
   }
 
-  window.tryRoundEnd = (maxLoops, funct) => {
-    CrowdServe.tryRoundEnd(maxLoops, (err,res) => {
-      if(err){
-        funct(err, undefined);
-      }else{
-        funct(undefined, res);
-      }
+  window.csContract.tryRoundEnd = (maxLoops) => {
+    return new Promise((reject, resolve) => {
+      CrowdServe.tryRoundEnd(maxLoops, (err,res) => {
+        if(err){
+          reject(err);
+        }else{
+          resolve(res);
+        }
+      });
     });
   }
-
-  //test of reading methods
-  getFullState((err,res) => {
-    console.log(res);
-    console.log(res.worker);
-    balanceOf(res.worker, (err,res) => {
-      console.log(res);
-    });
-    console.log(stateOutput(res.state));
-  });
 });
 
-var decodeTopic = (topic, abi) => {
-  for (var methodCounter = 0; methodCounter < abi.length; methodCounter++) {
-    var item = abi[methodCounter];
-    if (item.type != "event") continue;
-    var signature = item.name + "(" + item.inputs.map(function(input) {return input.type;}).join(",") + ")";
-    var hash = web3.sha3(signature);
-    if (hash == topic) {
-      return item;
-    }
-  }
-}
-
-
-//for promisification -- not yet used
-// const promisify = (inner) =>
-//   new Promise((resolve, reject) =>
-//     inner((err, res) => {
-//       if (err) { reject(err) }
-//
-//       resolve(res);
-//     })
-//   );
-
-function returnEventArguments(rawArguments, eventInfo){
-  if(eventInfo.name === "Created" || typeof eventInfo.inputs[0] == "undefined") return "";
-  var rawArgumentArray = rawArguments.substring(2).match(/.{1,64}/g);
-  switch(eventInfo.inputs[0].type){
-    case "address":
-      return "0x" + rawArgumentArray[rawArgumentArray.length-1].substring(24);
+//function used in csContract.getFullState() to transform state integer to string representation
+stateOutput = (stateInteger, inPreview) => {
+  switch (stateInteger){
+    case 0:
+      if (inPreview){
+        return "Active (Preview)"
+      } else{
+        return "Active";
+      }
       break;
-    case "uint256":
-      return parseInt(rawArgumentArray[rawArgumentArray.length-1], 16);
+    case 1:
+      return "Ending";
       break;
-    case "string":
-      var builtString = "";
-      rawArgumentArray.slice(2, rawArgumentArray.length).forEach((element) => {
-        builtString += web3.toAscii(element);
-      });
-      return builtString;
-      break;
-    case "bool":
-      return parseInt(rawArgumentArray[rawArgumentArray.length-1]) === 1;
+    case 2:
+      return "Inactive";
       break;
     default:
-    return "";
+      return undefined;
+      break;
   }
 }
+
+//used in csContract.getAllEvents() for the correct parsing of BigNumber arguments of events
+  var parseEventArguments = (eventArguments) => {
+    var argsObject = {};
+    for (var key in eventArguments){
+      if(eventArguments.hasOwnProperty(key)){
+        argumentValue = eventArguments[key];
+        if(typeof argumentValue === "object"){
+          argsObject[key] = Number(new web3.BigNumber(argumentValue));
+        } else{
+          argsObject[key] = argumentValue;
+        }
+      }
+    }
+    return argsObject;
+  }
