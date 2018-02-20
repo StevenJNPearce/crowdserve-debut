@@ -11,6 +11,30 @@ window.addEventListener(("load"), () => {
     console.log('No web3? You should consider trying MetaMask!')
     web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
   }
+  var crowdServeInstanceAddress;
+  web3.version.getNetwork((err, netId) => {
+    switch (netId) {
+      case "1":
+        console.log('This is mainnet');
+        crowdServeInstanceAddress = MAINNET_CROWDSERVE_ADDRESS;
+        break
+      case "2":
+        console.log('This is the deprecated Morden test network.')
+        break
+      case "3":
+        console.log('This is the ropsten test network.');
+        crowdServeInstanceAddress = ROPSTEN_CROWDSERVE_ADDRESS;
+        break
+      case "4":
+        console.log('This is the Rinkeby test network.')
+        break
+      case "42":
+        console.log('This is the Kovan test network.')
+        break
+      default:
+        crowdServeInstanceAddress = GANACHE_CROWDSERVE_ADDRESS;
+        console.log('This is an unknown network.')
+    }
 
   //create sample crowdserve object for initialization of crowdserve instances
   var CrowdServeClass =  web3.eth.contract([
@@ -549,7 +573,8 @@ window.addEventListener(("load"), () => {
 ]);
 
   //Instantiate contract object from already deployed contract at given address
-  var CrowdServe = CrowdServeClass.at(GANACHE_CROWDSERVE_ADDRESS);
+  var CrowdServe = CrowdServeClass.at(crowdServeInstanceAddress);
+
 
   /////////Reading calls begin here/////////////////////////////////////////////////////
   //method to call all state variables of the contract, returns object with strings and integers
@@ -853,7 +878,13 @@ window.addEventListener(("load"), () => {
       });
     });
   }
+
+  var csEvent = new Event('crowdserve_loaded');
+  window.dispatchEvent(csEvent);
+
 });
+});
+
 
 //function used in csContract.getFullState() to transform state integer to string representation
 stateOutput = (stateInteger, inPreview) => {

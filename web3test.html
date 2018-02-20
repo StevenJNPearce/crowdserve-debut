@@ -4,7 +4,11 @@
     <meta charset="utf-8">
     <script type="text/javascript" src="./libs/web3.min.js"></script>
     <script type="text/javascript" src="./js/crowdserve_api.js"></script>
-
+    <script type="text/javascript">
+    window.addEventListener("crowdserve_loaded", () => {
+      csContract.getFullState().then((res) => {console.log(res)});
+    })
+    </script>
     <title>Testpage for web3.js</title>
   </head>
   <body>
