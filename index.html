@@ -16,6 +16,7 @@
     <script src="./libs/xss-filters.min.js"></script>
     <script src="./libs/moment.min.js"></script>
     <script src="./js/components.js"></script>
+    <script src="./js/crowdserve_api.js"></script>
     <script src="./js/index.js"></script>
 
   </head>
@@ -83,7 +84,7 @@
           <div class="well well-sm row">
             <div class="col-md-6">
               <div class="total-contributions well well-sm" style="background-color:white;font-size: 20px">
-                <div class="centering">
+                <div style="text-align:left;">
                   <div class="total-contributed"><span style='color:#22d822'>+ <ether-output :wei="100000000000"></ether-output></span> contributed</div>
                   <div class="total-recalled"><span style="color:#dd250d;margin-left:3px;">- <ether-output :wei="100000000000"></ether-output></span> recalled</div>
                   <div class="line" style='height:2px;background-color:black;width:210px;'></div>

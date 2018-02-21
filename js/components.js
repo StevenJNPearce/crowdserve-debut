@@ -57,7 +57,7 @@ Vue.component('eth-address-output', {
       }
     }
   },
-  template: "<div class='popover-bubble'><span class='hover' onMouseOver='this.style.color=\"#005796\";this.style.textDecoration=\"underline\";' onMouseOut='this.style.color=\"#07C\";this.style.textDecoration=\"none\";' tabindex=0 data-trigger='focus' data-toggle='popover' data-placement='top' data-html='true' :data-content='popoverHtml' style='cursor:pointer; outline:none; color:#07C;'>{{formattedAddress}}</span></div>"
+  template: "<div class='popover-bubble' style='display: inline-block;'><span class='hover' onMouseOver='this.style.color=\"#005796\";this.style.textDecoration=\"underline\";' onMouseOut='this.style.color=\"#07C\";this.style.textDecoration=\"none\";' tabindex=0 data-trigger='focus' data-toggle='popover' data-placement='top' data-html='true' :data-content='popoverHtml' style='cursor:pointer; outline:none; color:#07C;'>{{formattedAddress}}</span></div>"
 });
 //ether-output helper function
 function copyTextToClipboard(text) {
