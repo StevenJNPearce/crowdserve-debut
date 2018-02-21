@@ -819,7 +819,7 @@ window.addEventListener(("load"), () => {
   //function transfer(address _to, uint _value, bytes _data)
   window.csContract.transfer = (address, value) => {
     return new Promise((resolve, reject) => {
-      CrowdServe.transfer(address, value, (err, res) => {
+      CrowdServe.transfer(address, web3.toWei(value), (err, res) => {
         if (err){
           reject(err);
         } else {
@@ -843,7 +843,7 @@ window.addEventListener(("load"), () => {
 
   window.csContract.recall = (amountInEth, message) => {
     return new Promise((resolve, reject) => {
-      CrowdServe.recall(amountInEth, message, (err,res) => {
+      CrowdServe.recall(web3.toWei(amountInEth), message, (err,res) => {
         if (err){
           reject(err);
         } else{

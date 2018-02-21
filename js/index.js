@@ -98,22 +98,9 @@ $(document).ready(function(){
           break;
         }
       }
-      console.log(vueInstance.events);
     });
 
   });
-
-
-/*
-vueInstance.events.push({event:'RoundBegun',timestamp:100, blockNumber:2, args:{amount:10000000000, from:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4'}});
-vueInstance.events.push({event:'RoundEnding',timestamp:100, blockNumber:2, args:{amount:10000000000, from:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4'}});
-vueInstance.events.push({event:'RoundEnded',timestamp:100, blockNumber:2, args:{amountRecalled:10000000000, amountWithdrawn:20000000000}});
-vueInstance.events.push({event:'Contribution',timestamp:100, blockNumber:2, args:{contributor:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4', amount:20000000000}});
-vueInstance.events.push({event:'FundsRecalled',timestamp:100, blockNumber:2, args:{contributor:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4', amountBurned:20000000000,amountReturned:20000000000, message:"I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!"}});
-vueInstance.events.push({event:'ContributorStatement',timestamp:100, blockNumber:2, args:{contributor:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4', amountBurned:20000000000, message:"Cool project!Cool project!Cool project!Cool project!Cool project!Cool project!Cool project!Cool project!"}});
-vueInstance.events.push({event:'WorkerStatement',timestamp:100, blockNumber:2, args:{message:"Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!"}});
-vueInstance.events.push({event:'Transfer',timestamp:100, blockNumber:2, args:{from:'0xfromaf517e255611ec404c1fa1d5123b6edf63b4',to:'0xto11af517e255611ec404c1fa1d5123b6edf63b4', value:20000000000}});
-*/
 
 });
 
@@ -121,15 +108,20 @@ vueInstance.events.push({event:'Transfer',timestamp:100, blockNumber:2, args:{fr
 
 //form functions
 function contributeFundsFromForm() {
-  console.log('you have contributed!');
+  var inputAmount = $('#contribute-amount-input').val();
+  csContract.contribute(inputAmount);
 }
 
 function transferFundsFromForm() {
-  console.log('you have transfered funds!');
+  var inputAmount = $('#transfer-amount-input').val();
+  var inputTo = $('#transfer-address-input').val();
+  csContract.transfer(inputTo, inputAmount);
 }
 
 function recallFundsFromForm() {
-  console.log('you have recalled funds!');
+  var inputAmount = $('#recall-amount-input').val();
+  var inputMessage = "Add message input to modal";
+  csContract.transfer(inputAmount,inputMessage);
 }
 
 function sendStatementFromForm() {
