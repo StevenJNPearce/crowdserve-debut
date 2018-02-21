@@ -1,5 +1,7 @@
+var workerAddress= 0x0;
+
 $(document).ready(function(){
-  var vueInstance = new Vue({
+    var vueInstance = new Vue({
     el:'#browseVue',
     data:{
       contractState:0,
@@ -51,8 +53,10 @@ $(document).ready(function(){
     }
   }
 
+
   window.addEventListener("crowdserve_loaded", () =>{
     csContract.getFullState().then((res) =>{
+      workerAddress = res.worker;
       vueInstance.contractState =  res.state;
       vueInstance.contractPreview = res.inPreview;
       vueInstance.previewEndTime = res.previewStageEndTime;
@@ -60,7 +64,6 @@ $(document).ready(function(){
       vueInstance.totalContributed = res.totalContributed;
       vueInstance.totalRecalled = res.totalRecalled;
       vueInstance.totalSupply = res.totalSupply;
-
       //proposalString
       if (res.state == "Active" || res.state == "Ending") {
         csContract.getRoundBegunEvents().then((roundBegun)=>{
@@ -136,6 +139,13 @@ function recallFundsFromForm() {
 }
 
 function sendStatementFromForm() {
+  var chatInput = $('#statement-text-input').val();
+  if (web3.eth.accounts[0] == workerAddress) {
+    csContract.setWorkerStatement(chatInput);
+  } else {
+    console.log('test');
+    csContract.setContributorStatement(0, chatInput);
+  }
   console.log('statement sent!');
   $('#sent-success').modal();
 }
