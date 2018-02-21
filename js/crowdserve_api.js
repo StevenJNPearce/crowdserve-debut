@@ -1,6 +1,10 @@
 const MAINNET_CROWDSERVE_ADDRESS = "";
+const MAINNET_EVENTSTART_BLOCKNR = 5128000;
 const ROPSTEN_CROWDSERVE_ADDRESS = "";
+const ROPSTEN_EVENTSTART_BLOCKNR = 2693000;
 const GANACHE_CROWDSERVE_ADDRESS = "0xe78a0f7e598cc8b0bb87894b0f60dd2a88d6a8ab";
+
+
 window.addEventListener(("load"), () => {
 
   // Checking i Web3 has been injected by the browser (Mist/MetaMask)
@@ -11,12 +15,16 @@ window.addEventListener(("load"), () => {
     console.log('No web3? You should consider trying MetaMask!')
     web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
   }
+
   var crowdServeInstanceAddress;
+  var eventStartBlock;
+
   web3.version.getNetwork((err, netId) => {
     switch (netId) {
       case "1":
         console.log('This is mainnet');
         crowdServeInstanceAddress = MAINNET_CROWDSERVE_ADDRESS;
+        eventStartBlock = MAINNET_EVENTSTART_BLOCKNR;
         break
       case "2":
         console.log('This is the deprecated Morden test network.')
@@ -24,6 +32,7 @@ window.addEventListener(("load"), () => {
       case "3":
         console.log('This is the ropsten test network.');
         crowdServeInstanceAddress = ROPSTEN_CROWDSERVE_ADDRESS;
+        eventStartBlock = ROPSTEN_EVENTSTART_BLOCKNR;
         break
       case "4":
         console.log('This is the Rinkeby test network.')
@@ -33,6 +42,7 @@ window.addEventListener(("load"), () => {
         break
       default:
         crowdServeInstanceAddress = GANACHE_CROWDSERVE_ADDRESS;
+        eventStartBlock = 0;
         console.log('This is an unknown network.')
     }
 
@@ -624,7 +634,7 @@ window.addEventListener(("load"), () => {
   // would get all past logs again.
   window.csContract.getAllEvents = () => {
     return new Promise((resolve, reject) => {
-      var allEvents = CrowdServe.allEvents({fromBlock: 0, toBlock: 'latest'});
+      var allEvents = CrowdServe.allEvents({fromBlock: eventStartBlock, toBlock: 'latest'});
       allEvents.get((err, res) => {
         if(err){
           reject(err);
@@ -644,7 +654,7 @@ window.addEventListener(("load"), () => {
   // event RoundBegun(string proposalString, uint previewStageEndTime, uint roundEndTime);
   window.csContract.getRoundBegunEvents = () => {
     return new Promise((resolve, reject) => {
-      var roundBegun = CrowdServe.RoundBegun({fromBlock: 0, toBlock: 'latest'});
+      var roundBegun = CrowdServe.RoundBegun({fromBlock: eventStartBlock, toBlock: 'latest'});
       roundBegun.get((err, res) => {
         if(err){
           reject(err);
@@ -666,7 +676,7 @@ window.addEventListener(("load"), () => {
   // event RoundEnding();
   window.csContract.getRoundEndingEvents = () => {
     return new Promise((resolve, reject) => {
-      var roundEnding = CrowdServe.RoundEnding({fromBlock: 0, toBlock: 'latest'});
+      var roundEnding = CrowdServe.RoundEnding({fromBlock: eventStartBlock, toBlock: 'latest'});
       roundEnding.get((err, res) => {
         if(err){
           reject(err);
@@ -685,7 +695,7 @@ window.addEventListener(("load"), () => {
   // event RoundEnded(uint amountRecalled, uint amountWithdrawn);
   window.csContract.getRoundEndedEvents = () => {
     return new Promise((resolve, reject) => {
-      var roundEnded = CrowdServe.RoundEnded({fromBlock: 0, toBlock: 'latest'});
+      var roundEnded = CrowdServe.RoundEnded({fromBlock: eventStartBlock, toBlock: 'latest'});
       roundEnded.get((err, res) => {
         if(err){
           reject(err);
@@ -706,7 +716,7 @@ window.addEventListener(("load"), () => {
    // event Contribution(address contributor, uint amount);
   window.csContract.getContributionEvents = () => {
     return new Promise((resolve, reject) => {
-      var contribution = CrowdServe.Contribution({fromBlock: 0, toBlock: 'latest'});
+      var contribution = CrowdServe.Contribution({fromBlock: eventStartBlock, toBlock: 'latest'});
       contribution.get((err, res) => {
         if(err){
           reject(err);
@@ -727,7 +737,7 @@ window.addEventListener(("load"), () => {
   // event FundsRecalled(address contributor, uint amountBurned, uint amountReturned, string message);
   window.csContract.getFundsRecalledEvents = () => {
     return new Promise((resolve, reject) => {
-      var fundsRecalled = CrowdServe.FundsRecalled({fromBlock: 0, toBlock: 'latest'});
+      var fundsRecalled = CrowdServe.FundsRecalled({fromBlock: eventStartBlock, toBlock: 'latest'});
       fundsRecalled.get((err, res) => {
         if(err){
           reject(err);
@@ -749,7 +759,7 @@ window.addEventListener(("load"), () => {
   // event ContributorStatement(address contributor, uint amountBurned, string message);
   window.csContract.getContributorStatementEvents = () => {
     return new Promise((resolve, reject) => {
-      var contributorStatement = CrowdServe.ContributorStatement({fromBlock: 0, toBlock: 'latest'});
+      var contributorStatement = CrowdServe.ContributorStatement({fromBlock: eventStartBlock, toBlock: 'latest'});
       contributorStatement.get((err, res) => {
         if(err){
           reject(err);
@@ -771,7 +781,7 @@ window.addEventListener(("load"), () => {
   // event WorkerStatement(string message);
   window.csContract.getWorkerStatementEvents = () => {
     return new Promise((resolve, reject) => {
-      var workerStatement = CrowdServe.WorkerStatement({fromBlock: 0, toBlock: 'latest'});
+      var workerStatement = CrowdServe.WorkerStatement({fromBlock: eventStartBlock, toBlock: 'latest'});
       workerStatement.get((err, res) => {
         if(err){
           reject(err);
