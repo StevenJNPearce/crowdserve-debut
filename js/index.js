@@ -50,53 +50,73 @@ $(document).ready(function(){
     }
   }
 
+  window.addEventListener("crowdserve_loaded", () =>{
+    csContract.getFullState().then((res) =>{
+      vueInstance.contractState =  res.state;
+      vueInstance.contractPreview = res.inPreview;
+      vueInstance.previewEndTime = res.previewStageEndTime;
+      vueInstance.roundEndTime = res.roundEndTime;
+      vueInstance.totalContributed = res.totalContributed;
+      vueInstance.totalRecalled = res.totalRecalled;
+      vueInstance.totalSupply = res.totalSupply;
 
-  window.addEventListener("crowdserve_loaded", () => {
-      csContract.getFullState().then((res) => {
-        vueInstance.contractState =  res.state;
-        vueInstance.contractPreview = res.inPreview;
-        vueInstance.previewEndTime = res.previewStageEndTime;
-        vueInstance.roundEndTime = res.roundEndTime;
-        vueInstance.totalContributed = res.totalContributed;
-        vueInstance.totalRecalled = res.totalRecalled;
-        vueInstance.totalSupply = res.totalSupply;
+      console.log(res);
+  });
 
-        console.log(res);
+
+  csContract.balanceOf(web3.eth.accounts[0]).then((res)=>{
+      vueInstance.balanceOfContributor = res;
     });
 
-
-    csContract.balanceOf(web3.eth.accounts[0]).then((res)=>
-      {
-        vueInstance.balanceOfContributor = res;
-      }
-    );
-
-    //events
-    csContract.getAllEvents().then((res) => {
-      for (var i=0; i< res.length; i++) {
-        switch(res[i].event) {
-          case 'Contribution':
-
-            break;
-          case 'FundsRecalled':
-
+  //events
+  csContract.getAllEvents().then((res) =>{
+    for (var i=0; i< res.length; i++) {
+      switch(res[i].event) {
+        case 'RoungBegun':
+          vueInstance.events.push({event:'RoundBegun',timestamp:res[i].timestamp, blockNumber:res[i].blockNumber, args:{amount:res[i].args.amount, from:res[i].args.from}});
+          break;
+        case 'RoundEnding':
+          vueInstance.events.push({event:'RoundEnding',timestamp:res[i].timestamp, blockNumber:res[i].blockNumber, args:{amount:res[i].args.amount, from:res[i].args.from}});
+          break;
+        case 'RoundEnded':
+          vueInstance.events.push({event:'RoundEnded',timestamp:res[i].timestamp, blockNumber:res[i].blockNumber, args:{amountRecalled:res[i].args.amountRecalled, amountWithdrawn:res[i].args.amountWithdrawn}});
+          break;
+        case 'Contribution':
+          vueInstance.events.push({event:'Contribution',timestamp:res[i].timestamp, blockNumber:res[i].blockNumber, args:{contributor:res[i].args.contributor, amount:res[i].args.amount}});
+          break;
+        case 'FundsRecalled':
+          vueInstance.events.push({event:'FundsRecalled',timestamp:res[i].timestamp, blockNumber:res[i].blockNumber, args:{contributor:res[i].args.contributor, amountBurned:res[i].args.amountBurned,amountReturned:res[i].args.amountReturned, message:res[i].args.message}});
+          break;
+        case 'ContributorStatement':
+          vueInstance.events.push({event:'ContributorStatement',timestamp:res[i].timestamp, blockNumber:res[i].blockNumber, args:{contributor:res[i].args.contributor, amountBurned:res[i].args.amountBurned, message:res[i].args.message}});
+          break;
+        case 'WorkerStatement':
+          vueInstance.events.push({event:'WorkerStatement',timestamp:res[i].timestamp, blockNumber:res[i].blockNumber, args:{message:res[i].args.message}});
+          break;
+        case 'Transfer':
+          vueInstance.events.push({event:'Transfer',timestamp:res[i].timestamp, blockNumber:res[i].blockNumber, args:{from:res[i].args.from,to:res[i].args.to, value:res[i].args.value}});
           break;
         }
       }
+      console.log(vueInstance.events);
     });
 
-    /*vueInstance.events.push({event:'RoundBegun',timestamp:100, blockNumber:2, args:{amount:10000000000, from:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4'}});
-    vueInstance.events.push({event:'RoundEnding',timestamp:100, blockNumber:2, args:{amount:10000000000, from:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4'}});
-    vueInstance.events.push({event:'RoundEnded',timestamp:100, blockNumber:2, args:{amountRecalled:10000000000, amountWithdrawn:20000000000}});
-    vueInstance.events.push({event:'Contribution',timestamp:100, blockNumber:2, args:{contributor:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4', amount:20000000000}});
-    vueInstance.events.push({event:'FundsRecalled',timestamp:100, blockNumber:2, args:{contributor:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4', amountBurned:20000000000,amountReturned:20000000000, message:"I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!"}});
-    vueInstance.events.push({event:'ContributorStatement',timestamp:100, blockNumber:2, args:{contributor:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4', amountBurned:20000000000, message:"Cool project!Cool project!Cool project!Cool project!Cool project!Cool project!Cool project!Cool project!"}});
-    vueInstance.events.push({event:'WorkerStatement',timestamp:100, blockNumber:2, args:{message:"Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!"}});
-    vueInstance.events.push({event:'Transfer',timestamp:100, blockNumber:2, args:{from:'0xfromaf517e255611ec404c1fa1d5123b6edf63b4',to:'0xto11af517e255611ec404c1fa1d5123b6edf63b4', value:20000000000}});
-  */
-
   });
+
+
+/*
+vueInstance.events.push({event:'RoundBegun',timestamp:100, blockNumber:2, args:{amount:10000000000, from:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4'}});
+vueInstance.events.push({event:'RoundEnding',timestamp:100, blockNumber:2, args:{amount:10000000000, from:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4'}});
+vueInstance.events.push({event:'RoundEnded',timestamp:100, blockNumber:2, args:{amountRecalled:10000000000, amountWithdrawn:20000000000}});
+vueInstance.events.push({event:'Contribution',timestamp:100, blockNumber:2, args:{contributor:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4', amount:20000000000}});
+vueInstance.events.push({event:'FundsRecalled',timestamp:100, blockNumber:2, args:{contributor:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4', amountBurned:20000000000,amountReturned:20000000000, message:"I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!I'm out!"}});
+vueInstance.events.push({event:'ContributorStatement',timestamp:100, blockNumber:2, args:{contributor:'0x967eaf517e255611ec404c1fa1d5123b6edf63b4', amountBurned:20000000000, message:"Cool project!Cool project!Cool project!Cool project!Cool project!Cool project!Cool project!Cool project!"}});
+vueInstance.events.push({event:'WorkerStatement',timestamp:100, blockNumber:2, args:{message:"Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!Thank you for your support!"}});
+vueInstance.events.push({event:'Transfer',timestamp:100, blockNumber:2, args:{from:'0xfromaf517e255611ec404c1fa1d5123b6edf63b4',to:'0xto11af517e255611ec404c1fa1d5123b6edf63b4', value:20000000000}});
+*/
+
 });
+
 
 
 //form functions

@@ -642,7 +642,7 @@ window.addEventListener(("load"), () => {
           var allEventsArray = [];
           res.forEach((element) => {
             var parsedArgsObject = parseEventArguments(element.args);
-            var eventObject = {event: element.event, transactionHash: element.transactionHash, args: parsedArgsObject};
+            var eventObject = {event: element.event, transactionHash: element.transactionHash, blockNumber:element.blockNumber, args: parsedArgsObject};
             allEventsArray.push(eventObject);
           });
           resolve(allEventsArray);
