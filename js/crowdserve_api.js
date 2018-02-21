@@ -900,11 +900,11 @@ window.addEventListener(("load"), () => {
 stateOutput = (stateInteger, inPreview) => {
   switch (stateInteger){
     case 0:
-      if (inPreview){
-        return "Active (Preview)"
-      } else{
-        return "Active";
-      }
+      //if (inPreview){
+      //  return "Active (Preview)"
+      //} else{
+      return "Active";
+      //}
       break;
     case 1:
       return "Ending";
