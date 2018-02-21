@@ -143,24 +143,16 @@ Vue.component('ether-output', {
 Vue.component('contract-state-output', {
   props: ['state', 'preview'],
   computed: {
-    formattedState: function() {
-      if (this.state == 0)
-        return "Active";
-      else if (this.state == 1)
-        return "Ending";
-      else if (this.state == 2)
-        return "Inactive";
-    },
     color: function() {
-      if (this.state == 0)
+      if (this.state == "Active")
         return "#ccffcc";
-      else if (this.state == 1)
+      else if (this.state == "Ending")
         return '#f27e6a';
-      else if (this.state == 2)
+      else if (this.state == "Inactive")
         return "#aaaaaa";
     }
   },
-  template: "<div class='well well-sm' style='display:inline-block;margin-bottom:0;color:black;width:250px;text-align:center;' v-bind:style='{backgroundColor:color}'><h3 style='margin-top:0;margin-bottom:0'>{{formattedState}}<span v-if='preview'> (Preview)</span></h3></div>"
+  template: "<div class='well well-sm' style='display:inline-block;margin-bottom:0;color:black;width:250px;text-align:center;' v-bind:style='{backgroundColor:color}'><h3 style='margin-top:0;margin-bottom:0'>{{state}}<span v-if='preview'> (Preview)</span></h3></div>"
 });
 
 //outputs information about the autorelease of the burnable payment
@@ -168,31 +160,20 @@ Vue.component('state-time-output', {
   props: ['state', 'previewEndTime', 'roundEndTime'],
   data: function() {
     return {
-      now: Math.floor(Date.now()/1000),
-      displayState: null
+      now: Math.floor(Date.now()/1000)
     }
   },
   methods: {
     calculate: function() {
       this.now = Math.floor(Date.now()/1000);
-      //determine display state
-      if (this.state == 0) {
-        this.displayState = 'Active';
-      }
-      else if (this.state == 1) {
-        this.displayState = 'Inactive';
-      }
-      else if (this.state == 2) {
-        this.displayState = 'Ending';
-      }
     }
   },
   computed: {
     labelText: function() {
-      if (this.displayState == 'Active' || this.displayState == 'Ending') {
+      if (this.state == 'Active' || this.state == 'Ending') {
         return "Preview ends in: " + this.previewTimeText +'</br>Round ends in: ' + this.roundEndTimeText;
       }
-      else if (this.displayState == 'Inactive') {
+      else if (this.state == 'Inactive') {
         return "Preview period has not started.<br>Round has not started.";
       }
     },

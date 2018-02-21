@@ -85,10 +85,10 @@
             <div class="col-md-6">
               <div class="total-contributions well well-sm" style="background-color:white;font-size: 20px">
                 <div style="text-align:left;">
-                  <div class="total-contributed"><span style='color:#22d822'>+ <ether-output :wei="100000000000"></ether-output></span> contributed</div>
-                  <div class="total-recalled"><span style="color:#dd250d;margin-left:3px;">- <ether-output :wei="100000000000"></ether-output></span> recalled</div>
+                  <div class="total-contributed"><span style='color:#22d822;'>+ <ether-output :wei="totalContributed"></ether-output></span> contributed</div>
+                  <div class="total-recalled"><span style="color:#dd250d;margin-left:3px;">- <ether-output :wei="totalRecalled"></ether-output></span> recalled</div>
                   <div class="line" style='height:2px;background-color:black;width:210px;'></div>
-                  <div class="total-supply">Supply: <ether-output :wei="100000000000"></ether-output></div>
+                  <div class="total-supply">Supply: <ether-output :wei="totalSupply"></ether-output></div>
                 </div>
               </div>
             </div>
@@ -96,9 +96,9 @@
               <div class="individual-contributions">
                 <div class="well well-sm" style="background-color:white;">
                   <div class="individual-contributions-centering">
-                    <h3 class="text-center">Your contributions</h3>
+                    <h3 class="text-center">Your balance</h3>
                     <div style="text-align:center; margin-top: 20px;margin-left: 20px;font-size:20px;">
-                      <ether-output :wei="100000000000"></ether-output>
+                      <ether-output :wei="balanceOfContributor"></ether-output>
                     </div>
                     <div class="row" style="display:flex;justify-content:space-evenly; margin-top:20px">
                       <div class="">
