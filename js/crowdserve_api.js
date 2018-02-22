@@ -640,15 +640,25 @@ window.addEventListener(("load"), () => {
           reject(err);
         } else{
           var allEventsArray = [];
+          var tsPromiseArray = [];
           res.forEach((element) => {
             var parsedArgsObject = parseEventArguments(element.args);
             var eventObject = {event: element.event, transactionHash: element.transactionHash, blockNumber:element.blockNumber, args: parsedArgsObject};
-            getBlockTimeStamp(element.blockHash).then(function(timestamp) {
-              eventObject.timestamp = timestamp;
+            
+            var tsPromise = new Promise((tsResolve, reject) => {
+              getBlockTimeStamp(element.blockHash).then(timestamp => {
+                eventObject.timestamp = timestamp;
+                tsResolve();
+              });
             });
+            tsPromiseArray.push(tsPromise);
+            
             allEventsArray.push(eventObject);
           });
-          resolve(allEventsArray);
+          
+          Promise.all(tsPromiseArray).then(function() {
+            resolve(allEventsArray);
+          });
         }
       });
     });
