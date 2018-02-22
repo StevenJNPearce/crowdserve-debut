@@ -2,7 +2,7 @@ var workerAddress= 0x0;
 
 $(document).ready(function(){
   var vueInstance = new Vue({
-    el:'#browseVue',
+    el:'#mainVue',
     data:{
       contractState:0,
       contractPreview:false,
