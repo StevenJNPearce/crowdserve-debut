@@ -643,6 +643,9 @@ window.addEventListener(("load"), () => {
           res.forEach((element) => {
             var parsedArgsObject = parseEventArguments(element.args);
             var eventObject = {event: element.event, transactionHash: element.transactionHash, blockNumber:element.blockNumber, args: parsedArgsObject};
+            getBlockTimeStamp(element.blockHash).then(function(timestamp) {
+              eventObject.timestamp = timestamp;
+            });
             allEventsArray.push(eventObject);
           });
           resolve(allEventsArray);
