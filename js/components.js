@@ -203,12 +203,9 @@ Vue.component('state-time-output', {
 Vue.component('crowdserve-event-row', {
   props: ['event'],
   computed: {
-    formattedWorkerStatement: function() {
-      //return "Payer Statement<br><div class='well well-sm' style='margin-bottom:0;background-color:#aaffff'>"+xssFilters.inHTMLData(this.event.args.statement).replace(/(?:\r\n|\r|\n)/g, '<br />') + "</div>";
+    formattedMessage: function() {
+      return safeTextTransform(this.event.args.message);
     },
-    formattedContributorStatement: function() {
-      //return "Contributor Statement<br><div class='well well-sm' style='margin-bottom:0;background-color:#aaffff'>"+xssFilters.inHTMLData(this.event.args.statement).replace(/(?:\r\n|\r|\n)/g, '<br />') + "</div>";
-    }
   },
   template:
 `
@@ -217,8 +214,8 @@ Vue.component('crowdserve-event-row', {
 <div v-else-if="this.event.event == 'RoundEnded'" align='center'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#aaaaaa;display:inline-block'>Round has ended.</div></div>
 <div v-else-if="this.event.event == 'Contribution'" align='right'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#dbdbff;display:inline-block'><eth-address-output :shorten-to=10 :address='event.args.contributor'></eth-address-output> contributed <ether-output :wei='event.args.amount'></ether-output>.</div></div>
 <div v-else-if="this.event.event == 'FundsRecalled'" align='right'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#dbdbff;display:inline-block;max-width:50%;'><eth-address-output :shorten-to=10 :address='event.args.contributor'></eth-address-output> recalled <ether-output :wei='event.args.amountReturned'></ether-output><span v-if='event.args.message.length>0'> and said:<div v-html='event.args.message' class="well well-sm" style='background-color:#ccccff;margin-top:10px;'></div></span></div></div>
-<div v-else-if="this.event.event == 'ContributorStatement'" align='right'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#dbdbff;display:inline-block;max-width:50%'><eth-address-output :shorten-to=10 :address='event.args.contributor'></eth-address-output> said: <div class='well well-sm' style='background-color:#ccccff;margin-top:10px;'>{{event.args.message}}</div></div></div>
-<div v-else-if="this.event.event == 'WorkerStatement'" align='left'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#ccffff;display:inline-block;max-width:50%'>Worker said: <div class='well well-sm' style='background-color:#afffff;margin-top:10px;'>{{event.args.message}}</div></div></div>
+<div v-else-if="this.event.event == 'ContributorStatement'" align='right'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#dbdbff;display:inline-block;max-width:50%'><eth-address-output :shorten-to=10 :address='event.args.contributor'></eth-address-output> said: <div class='well well-sm' style='background-color:#ccccff;margin-top:10px;'>{{formattedMessage}}</div></div></div>
+<div v-else-if="this.event.event == 'WorkerStatement'" align='left'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#ccffff;display:inline-block;max-width:50%'>Worker said: <div class='well well-sm' style='background-color:#afffff;margin-top:10px;'>{{formattedMessage}}</div></div></div>
 <div v-else-if="this.event.event == 'Transfer'" align='center'><blocknum-output :blocknum='event.blockNumber' :timestamp='event.timestamp'></blocknum-output><br><div class='well well-sm' align='left' style='background-color:#dddddd;display:inline-block'><eth-address-output :shorten-to=10 :address='event.args.from'></eth-address-output> transfered <ether-output :wei='event.args.value'></ether-output> to <eth-address-output :shorten-to=10 :address='event.args.to'></eth-address-output>.</div></div>
 `
 });

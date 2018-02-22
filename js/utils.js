@@ -10,3 +10,7 @@ function getBlockTimeStamp(blockHash) {
     })
   })
 }
+
+function safeTextTransform(str) {
+  return xssFilters.inHTMLData(str).replace(/(?:\r\n|\r|\n)/g, '<br />');
+}
