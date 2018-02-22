@@ -1,6 +1,15 @@
 var workerAddress= 0x0;
 
 $(document).ready(function(){
+  web3.version.getNetwork((err, netId) => {
+    if (netId != "1") {
+      $("#networkWarning").show();
+    }
+  });
+  if (web3.eth.accounts.length == 0) {
+    $("#noWeb3AccountWarning").show();
+  }
+  
   var vueInstance = new Vue({
     el:'#mainVue',
     data:{
